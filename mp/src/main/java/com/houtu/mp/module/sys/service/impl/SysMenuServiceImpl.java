@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -92,7 +93,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
             sysMenuEntity.setPath(request.getPath());
         }
         if (request.getMenuType() == 2 || request.getMenuType() == 3) {
-            ResponseData responseData = verifyPerms(request.getPerms());
+            ResponseData responseData = verifyPerms(request.getMenuType(), request.getPerms());
             if (!responseData.hasSuccess())
                 return responseData;
             sysMenuEntity.setPerms(request.getPerms());
@@ -127,7 +128,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
             sysMenuEntity.setPath(request.getPath());
         }
         if (queryMenuEntity.getMenuType() == 2 || queryMenuEntity.getMenuType() == 3) {
-            ResponseData responseData = verifyPerms(request.getPerms());
+            ResponseData responseData = verifyPerms(queryMenuEntity.getMenuType(), request.getPerms());
             if (!responseData.hasSuccess())
                 return responseData;
             sysMenuEntity.setPerms(request.getPerms());
@@ -187,8 +188,11 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
      * @param perms 权限
      * @return 校验结果
      */
-    private ResponseData verifyPerms(String perms) {
-        if (StringUtils.isEmpty(perms)) {
+    private ResponseData verifyPerms(Integer menuType, String perms) {
+        if (!Objects.equals(menuType, 3) && StringUtils.isEmpty(perms)) {
+            return ResponseData.success();
+        }
+        if (Objects.equals(menuType, 3) && StringUtils.isEmpty(perms)) {
             return ResponseData.fail(ErrorCode.build(30, Stream.of("perms can't be empty").toArray()));
         }
         if (!perms.matches("^[a-zA-Z0-9_]+(:[a-zA-Z0-9_]+)+$")) {
