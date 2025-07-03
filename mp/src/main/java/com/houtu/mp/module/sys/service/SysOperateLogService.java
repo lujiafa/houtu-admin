@@ -1,0 +1,22 @@
+package com.houtu.mp.module.sys.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.houtu.mp.module.sys.entity.SysOperateLogEntity;
+import com.houtu.mp.module.sys.request.SysOperateQueryRequest;
+import com.houtu.mp.module.sys.vo.SysOperateLogQueryVO;
+import com.houtu.web.model.response.ResponseData;
+import com.houtu.web.model.vo.PageDataVO;
+
+/**
+ * <p>
+ * sys_operate_log 服务类
+ * </p>
+ *
+ * @author jonlu
+ * @since 2024-07-24
+ */
+public interface SysOperateLogService extends IService<SysOperateLogEntity> {
+
+    ResponseData<PageDataVO<SysOperateLogQueryVO>> pageQuery(SysOperateQueryRequest request);
+
+}

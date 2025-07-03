@@ -1,0 +1,48 @@
+package com.houtu.mp.module.sys.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.houtu.mp.module.sys.entity.SysMenuEntity;
+import com.houtu.mp.module.sys.request.SysMenuAddRequest;
+import com.houtu.mp.module.sys.request.SysMenuQueryRequest;
+import com.houtu.mp.module.sys.request.SysMenuUpdateRequest;
+import com.houtu.mp.module.sys.vo.SysMenuQueryBaseVO;
+import com.houtu.mp.module.sys.vo.SysMenuQueryVO;
+import com.houtu.web.model.response.ResponseData;
+
+import java.util.List;
+
+/**
+ * <p>
+ * sys_menu 服务类
+ * </p>
+ *
+ * @author houtu
+ * @since 2024-06-21
+ */
+public interface SysMenuService extends IService<SysMenuEntity> {
+
+    /**
+     * 查询菜单列表并仅返回简单信息
+     * @param request 参数
+     * @return 列表
+     */
+    List<SysMenuQueryBaseVO> queryBaseList(SysMenuQueryRequest request);
+
+    List<SysMenuQueryVO> queryList(SysMenuQueryRequest request);
+
+
+    /**
+     * 根据角色查询菜单列表
+     * @param roleIds 角色参数【不能为空】
+     * @param status 状态，可省略
+     * @return 列表
+     */
+    List<SysMenuQueryBaseVO> selectBaseListByRoles(List<Long> roleIds, Integer status);
+
+    ResponseData save(SysMenuAddRequest request);
+
+    ResponseData update(SysMenuUpdateRequest request);
+
+    ResponseData delete(Long menuId);
+
+}

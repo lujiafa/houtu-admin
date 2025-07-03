@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.houtu.mp.module.sys.dao.SysRoleDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.houtu.mp.module.sys.entity.SysRoleEntity">
+        <id column="role_id" property="roleId" />
+        <result column="role_name" property="roleName" />
+        <result column="role_perms" property="rolePerms" />
+        <result column="sort" property="sort" />
+        <result column="remark" property="remark" />
+        <result column="status" property="status" />
+        <result column="deleted" property="deleted" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        role_id, role_name, role_perms, sort, remark, `status`, deleted, create_by, create_time, update_by, update_time
+    </sql>
+
+    <select id="queryUserRoleList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_role
+        where deleted = 0
+        <if test="status != null">
+            and `status` = #{status}
+        </if>
+        and role_id in (
+            select role_id from sys_user_role sur where sur.user_id = #{userId}
+            union
+            select role_id from sys_org_role sor join sys_user_org suo on suo.org_id = sor.org_id where suo.user_id =
+            #{userId}
+            union
+            select role_id from sys_post_role spr join sys_user_post sup on sup.post_id = spr.post_id where sup.user_id =
+            #{userId}
+        )
+    </select>
+
+</mapper>

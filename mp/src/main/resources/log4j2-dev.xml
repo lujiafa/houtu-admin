@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+	<properties>
+		<property name="LOG_HOME">${sys:LOG_PATH}</property>
+	</properties>
+	<appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="%d|%-5p|%t|%c:%L|%m%n" />
+		</Console>
+		<RollingFile name="outLog" fileName="${LOG_HOME}/out.log" filePattern="${LOG_HOME}/out.%d{yyyy-MM-dd}.log.%i.gz">
+			<PatternLayout pattern="%d|%-5p|%t|%c{2.}:%L|%m%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" />
+				<SizeBasedTriggeringPolicy size="200MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="20" />
+		</RollingFile>
+		<RollingFile name="appLog" fileName="${LOG_HOME}/application.log" filePattern="${LOG_HOME}/application.%d{yyyy-MM-dd}.log.%i.gz">
+			<PatternLayout pattern="%d|%-5p|%t|%c{2.}:%L|%m%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" />
+				<SizeBasedTriggeringPolicy size="200MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="20" />
+		</RollingFile>
+	</appenders>
+
+	<loggers>
+		<root level="info">
+			<appender-ref ref="Console" />
+		</root>
+		<logger name="com.houtu" level="info" additivity="false">
+			<appender-ref ref="appLog"/>
+			<appender-ref ref="Console" />
+		</logger>
+	</loggers>
+</configuration> 

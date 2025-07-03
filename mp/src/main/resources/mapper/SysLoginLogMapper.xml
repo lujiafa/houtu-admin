@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.houtu.mp.module.sys.dao.SysLoginLogDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.houtu.mp.module.sys.entity.SysLoginLogEntity">
+        <id column="login_log_id" property="loginLogId" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="ip" property="ip" />
+        <result column="location" property="location" />
+        <result column="user_agent" property="userAgent" />
+        <result column="device_type" property="deviceType" />
+        <result column="login_type" property="loginType" />
+        <result column="login_type_desc" property="loginTypeDesc" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        login_log_id, user_id, user_name, ip, location, user_agent, device_type, login_type, login_type_desc, create_time
+    </sql>
+
+</mapper>
