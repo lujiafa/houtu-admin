@@ -347,6 +347,9 @@ export default {
         default-expand-all
     >
       <el-table-column prop="menuName" :label="$t('menuManage.menuName')"/>
+      <el-table-column prop="menuType" :label="$t('menuManage.menuType')">
+        <template #default="{ row }">{{$t("menuManage.menuType_" + row.menuType)}}</template>
+      </el-table-column>
       <el-table-column prop="sort" :label="$t('menuManage.sort')"/>
       <el-table-column prop="perms" :label="$t('menuManage.perms')"/>
       <el-table-column prop="path" :label="$t('menuManage.path')"/>
@@ -360,7 +363,7 @@ export default {
       <el-table-column prop="createTime" :label="$t('common.createTime')"/>
       <el-table-column :label="$t('common.operation')">
         <template #default="{ row }">
-          <el-button type='primary' link v-if="row.menuType !== 3 && permsAdd" @click="handleAdd(row)">{{
+          <el-button type='primary' link v-if="row.menuType !== 3 && row.pathType != 2 && permsAdd" @click="handleAdd(row)">{{
               $t('common.add')
             }}
           </el-button>
@@ -429,7 +432,7 @@ export default {
           <el-input v-model="formParams.path"/>
         </el-form-item>
         <el-form-item v-if="formParams.menuType === 2 || formParams.menuType === 3" :label="$t('menuManage.perms')"
-                      prop="perms" :rules="formValidRules.commonRequired">
+                      prop="perms" :rules="formParams.menuType === 3 ? formValidRules.commonRequired : ()=>{}">
           <el-input v-model="formParams.perms"/>
         </el-form-item>
         <el-form-item :label="$t('menuManage.sort')" prop="sort" :rules="formValidRules.commonRequired">
