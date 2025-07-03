@@ -1,0 +1,38 @@
+logging:
+  file:
+    path: logs
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/sysbase?characterEncoding=utf-8&autoReconnect=true&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    hikari:
+      # 连接池最大连接数，默认是10
+      maximum-pool-size: 30
+      minimum-idle: 2
+      # 一个连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认1800000即30分钟
+      # 建议设置比数据库主动超时断开时间短一些（示例：查看mysql主动超时端口时间SHOW GLOBAL VARIABLES like 'wait_timeout';）
+      max-lifetime: 10800000
+      # 空闲连接存活最大时间，默认600000（10分钟）
+      idle-timeout: 300000
+      validation-timeout: 1000
+      # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException， 缺省:30秒
+      connection-timeout: 30000
+      connection-test-query: select 1
+      auto-commit: true
+  data:
+    redis:
+      database: 0
+      host: 127.0.0.1
+      port: 6379
+      password: redis123
+      timeout: 15s
+      lettuce:
+        pool:
+          max-active: 6
+          max-wait: 30s
+          max-idle: 6
+          min-idle: 2

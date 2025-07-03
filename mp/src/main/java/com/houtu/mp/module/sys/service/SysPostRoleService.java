@@ -1,0 +1,16 @@
+package com.houtu.mp.module.sys.service;
+
+import com.houtu.mp.module.sys.entity.SysPostRoleEntity;
+import com.baomidou.mybatisplus.extension.service.IService;
+
+/**
+ * <p>
+ * sys_post_role 服务类
+ * </p>
+ *
+ * @author houtu
+ * @since 2024-06-24
+ */
+public interface SysPostRoleService extends IService<SysPostRoleEntity> {
+
+}

@@ -1,0 +1,101 @@
+import menuManage from '@/locale/lang/menu-manage/zhCn'
+import orgManage from '@/locale/lang/org-manage/zhCn'
+import postManage from '@/locale/lang/post-manage/zhCn'
+import roleManage from '@/locale/lang/role-manage/zhCn'
+import userManage from '@/locale/lang/user-manage/zhCn'
+import dictManage from '@/locale/lang/dict-manage/zhCn'
+import paramsManage from '@/locale/lang/params-manage/zhCn'
+import logLogin from '@/locale/lang/log-login/zhCn'
+import logOperate from '@/locale/lang/log-operate/zhCn'
+
+export const zhCn = {
+    systemName: '',
+    welcome: '欢迎使用',
+    userCenter: '个人中心',
+    logout: '退出登录',
+    updatePassword: '修改密码',
+    homeMenuName: '首页',
+    error: {
+        networkMessage: '网络或服务异常，请稍后重试({refMessage})',
+        sessionExpired: '登录会话已失效，请重新登陆',
+    },
+    componentSize: {
+        large: '大',
+        default: '默认',
+        small: '小',
+    },
+    login: {
+        usernamePlaceholder: '用户名',
+        passwordPlaceholder: '密码',
+        captchaPlaceholder: '验证码',
+        loginBtnText: '登录',
+    },
+    mfa: {
+        title: 'MFA 多因子认证',
+        sendButtonText: '发送验证码',
+        resendButtonText: '重新发送{remainingTime}',
+        inputPlaceHolder: '验证码',
+    },
+    theme: {
+      switchTheme: '切换主题',
+    },
+    common: {
+        add: '新增',
+        edit: '修改',
+        delete: '删除',
+        operation: '操作',
+        expandOrCollapse: '展开/收起',
+        search: '查询',
+        reset: '重置',
+        prompt: '提示',
+        confirmDeleteDesc: '此操作将永久删除该数据, 您是否想继续？',
+        openMFADesc: '此操作将开启MFA验证流程, 您是否想继续？',
+        resetMFADesc: '此操作重置MFA, 您是否想继续？',
+        addSuccessDesc: '添加成功',
+        updateSuccessDesc: '修改成功',
+        deleteSuccessDesc: '删除成功',
+        operateSuccess: '操作成功',
+        confirm: '确定',
+        cancel: '取消',
+        nextStep: '下一步',
+        close: '关闭',
+        closeCurrent: '关闭当前',
+        closeRight: '关闭右侧',
+        closeLeft: '关闭左侧',
+        closeOther: '关闭其他',
+        clickCopy: '点击复制',
+        contentCopied: '内容已复制',
+        copyFail: '复制失败',
+        my: '我的',
+        name: '名称',
+        status: '状态',
+        enable: '启用',
+        disable: '禁用',
+        remark: '备注',
+        createTime: '创建时间',
+        updateTime: '更新时间',
+        rootNode: '根节点',
+        parentNode: '上级节点',
+        type: '类型',
+        beginTime: '开始时间',
+        endTime: '结束时间',
+        oldPassword: '原密码',
+        newPassword: '新密码',
+        confirmPassword: '确认密码',
+    },
+    commonFormValidRules: {
+        required: '必填项',
+        lengthRange: '长度为{min}-{max}个字符',
+        lengthCodeRange: '格式为{format}，长度为{min}-{max}个字符',
+        validConfirmPassword: '确认密码不一致',
+    },
+    ...menuManage,
+    ...orgManage,
+    ...postManage,
+    ...roleManage,
+    ...userManage,
+    ...dictManage,
+    ...paramsManage,
+    ...logLogin,
+    ...logOperate,
+}

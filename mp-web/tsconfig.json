@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "target": "es6", // 设置目标为最新的ES标准
+    "module": "esnext", // 使用ES模块
+    "useDefineForClassFields": true,
+    "lib": ["esnext", "dom"], // 包含ESNext特性和DOM API
+    "skipLibCheck": true, // 跳过库文件的类型检查以加速编译
+    "moduleResolution": "node",
+    "allowJs": true,
+    "resolveJsonModule": true, // 允许导入JSON文件
+    "isolatedModules": true, // 单独编译每个模块，提高类型检查速度
+    "types": ["vite/client", "webpack-env"],
+    //"strict": true // 启用严格类型检查，有助于发现潜在问题
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": ["node_modules", "dist"]
+}

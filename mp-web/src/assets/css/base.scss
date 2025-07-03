@@ -1,0 +1,43 @@
+html,body,.v-lu-fill {
+  margin: 0;
+  padding: 0;
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
+// 定义菜单图标大小
+.v-lu-menu-icon {
+  font-size: 16px;
+}
+// 定义菜单图标大小
+.v-lu-header-icon {
+  font-size: 16px;
+}
+
+@mixin v-lu-fill {
+  margin: 0;
+  padding: 0;
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
+@mixin v-lu-fill-width {
+  margin: 0;
+  padding: 0;
+  border: none;
+  width: 100%;
+}
+
+:root {
+  // 主页-侧边栏-logo模块高度
+  --layout-aside-logo-height: 50px;
+  // 主页-侧边栏-展开宽度
+  --layout-aside-expand-width: 180px;
+  // 主页-头部-高度
+  --layout-header-height: 50px;
+  // 主页-头部-tabs-高度
+  --layout-main-tabs-height: 40px;
+
+}
