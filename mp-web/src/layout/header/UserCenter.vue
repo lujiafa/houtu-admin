@@ -22,7 +22,11 @@ export default {
     themes() {
       return themes
     },
-    // 开启MFA
+    // 显示个人中心
+    showUserCenter() {
+      this.store.applyModule(this.$router, new ModuleItem("userCenter", this.$t("userCenter"), [], "/index/info", [], true));
+    },
+    // 开通MFA验证功能
     openMFA() {
       let that = this;
       this.$confirm(this.$i18n.t('common.openMFADesc'), this.$i18n.t('common.prompt'), {
@@ -83,8 +87,8 @@ export default {
       <el-avatar src="src/assets/default-avatar.svg" class="v-lu-header-avatar"/>
       <template #dropdown>
         <el-dropdown-menu>
-          <!--            <el-dropdown-item>{{ $t("userCenter") }}</el-dropdown-item>-->
-          <el-dropdown-item v-if="showOpenMFA" @click="openMFA">开启MFA</el-dropdown-item>
+          <el-dropdown-item @click="showUserCenter">{{ $t("userCenter") }}</el-dropdown-item>
+          <el-dropdown-item v-if="showOpenMFA" @click="openMFA">{{ $t('common.open') }}MFA</el-dropdown-item>
           <el-dropdown-item v-if="mfaOTPEnabled" @click="displayMyOTP">{{ $t('common.my') }} OTP</el-dropdown-item>
           <el-dropdown-item @click="updatePassword">{{ $t("updatePassword") }}</el-dropdown-item>
           <el-dropdown-item @click="showSwitchTheme">{{ $t("theme.switchTheme") }}</el-dropdown-item>

@@ -1,11 +1,12 @@
 package com.houtu.mp.module.base.vo;
 
+import com.houtu.web.model.BaseVO;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class ShowMenuVO {
+public class ShowMenuVO extends BaseVO {
 
     private Long menuId;
 

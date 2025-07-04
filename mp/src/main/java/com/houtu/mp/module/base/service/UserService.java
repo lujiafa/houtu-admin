@@ -2,17 +2,32 @@ package com.houtu.mp.module.base.service;
 
 import com.houtu.mp.module.base.request.MFASendRequest;
 import com.houtu.mp.module.base.request.MFAVerifyRequest;
+import com.houtu.mp.module.base.request.UserInfoUpdateRequest;
 import com.houtu.mp.module.base.request.UserUpdateMyselfPasswordRequest;
+import com.houtu.mp.module.base.vo.UserInfoVO;
 import com.houtu.web.model.response.ResponseData;
 
 public interface UserService {
 
+    /**
+     * 获取当前用户信息
+     * @return UserInfoVO 用户信息
+     */
+    UserInfoVO info();
+
+
+    /**
+     * 修改当前登录用户信息
+     * @param request 修改信息
+     * @return ResponseData 修改结果
+     */
+    ResponseData updateUserInfo(UserInfoUpdateRequest request);
 
 
     /**
      * 修改当前登录用户的密码
-     * @param request
-     * @return ResponseData
+     * @param request 修改密码
+     * @return ResponseData 修改结果
      */
     ResponseData updateMyselfPassword(UserUpdateMyselfPasswordRequest request);
 

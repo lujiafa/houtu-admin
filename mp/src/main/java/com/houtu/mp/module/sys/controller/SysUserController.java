@@ -2,6 +2,7 @@ package com.houtu.mp.module.sys.controller;
 
 import com.houtu.mp.aspect.OperateLog;
 import com.houtu.mp.config.security.SimpleUser;
+import com.houtu.mp.module.base.vo.UserInfoVO;
 import com.houtu.mp.module.sys.entity.SysUserEntity;
 import com.houtu.mp.module.sys.request.*;
 import com.houtu.mp.module.sys.service.SysOrgService;
@@ -35,14 +36,6 @@ public class SysUserController {
     private SysOrgService orgService;
     @Resource
     private SysRoleService roleService;
-
-    @GetMapping("/info")
-    public ResponseData<UserInfoVO> info() {
-        SimpleUser sessionUser = SessionContext.getSessionUser();
-        SysUserEntity sysUserEntity = userService.findByUsername(sessionUser.getUsername());
-        UserInfoVO userInfoVO = BeanUtils.copyProperties(sysUserEntity, UserInfoVO.class);
-        return ResponseData.success(userInfoVO);
-    }
 
     @PreAuthorize("hasAuthority('system:user:query')")
     @GetMapping("/query")
