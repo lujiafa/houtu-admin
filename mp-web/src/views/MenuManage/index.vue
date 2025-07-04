@@ -165,7 +165,8 @@ export default {
               params.pathType = formParams.pathType;
               params.path = formParams.path;
               if (formParams.pathType === 1) {
-                params.perms = formParams.perms;
+                // 菜单类型2且原生地址时perms字段为可选填，若填写则必须满足规范
+                params.perms = formParams.perms === '' ? null : formParams.perms;
               }
               break;
             case 3:
@@ -199,7 +200,8 @@ export default {
               params.pathType = formParams.pathType;
               params.path = formParams.path;
               if (formParams.pathType === 1) {
-                params.perms = formParams.perms;
+                // 菜单类型2且原生地址时perms字段为可选填，若填写则必须满足规范
+                params.perms = formParams.perms === '' ? null : formParams.perms;
               }
               break;
             case 3:

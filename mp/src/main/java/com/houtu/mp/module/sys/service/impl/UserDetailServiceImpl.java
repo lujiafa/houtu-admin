@@ -40,10 +40,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         List<SysRoleEntity> sysRoleEntityList = sysRoleDao.queryUserRoleList(sysUserEntity.getUserId(), 1);
         if (sysRoleEntityList != null && !sysRoleEntityList.isEmpty()) {
-            authorities.addAll(sysRoleEntityList.parallelStream().map(r -> new SimpleGrantedAuthority(r.getRolePerms())).collect(Collectors.toList()));
+            authorities.addAll(sysRoleEntityList.parallelStream().filter(r -> StringUtils.isNotBlank(r.getRolePerms())).map(r -> new SimpleGrantedAuthority(r.getRolePerms())).collect(Collectors.toList()));
             List<SysMenuEntity> sysMenuEntities = sysMenuDao.queryMenuByRoleIds(sysRoleEntityList.parallelStream().map(SysRoleEntity::getRoleId).collect(Collectors.toList()), 1, null);
             if (sysMenuEntities != null && !sysMenuEntities.isEmpty()) {
-                authorities.addAll(sysMenuEntities.parallelStream().filter(p-> StringUtils.isNotEmpty(p.getPerms())).map(m -> new SimpleGrantedAuthority(m.getPerms())).collect(Collectors.toSet()));
+                authorities.addAll(sysMenuEntities.parallelStream().filter(p-> StringUtils.isNotBlank(p.getPerms())).map(m -> new SimpleGrantedAuthority(m.getPerms())).collect(Collectors.toSet()));
             }
         }
         SimpleUser simpleUser = new SimpleUser(sysUserEntity.getUserName(), sysUserEntity.getPassword(), Objects.equals(sysUserEntity.getStatus(), 1), true, true, true, authorities);

@@ -48,6 +48,7 @@ export const en = {
         search: 'Search',
         reset: 'Reset',
         prompt: 'Prompt',
+        open: 'Open',
         confirmDeleteDesc: 'This operation will delete the data permanently, do you want to continue?',
         openMFADesc: 'This operation will open MFA verification process, do you want to continue?',
         resetMFADesc: 'This operation will reset MFA, do you want to continue?',

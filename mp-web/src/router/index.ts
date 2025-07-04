@@ -48,6 +48,9 @@ const routes : Readonly<RouteRecordRaw[]> = [
                 path: 'optLog',
                 component: () => import('@/views/OptLog/index.vue')
             }, {
+                path: 'info',
+                component: () => import('@/views/UserCenter/UserInfo.vue')
+            }, {
                 path: 'updatePassword',
                 component: () => import('@/views/UserCenter/UpdateMySelfPassword.vue')
             }, {

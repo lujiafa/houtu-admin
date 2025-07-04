@@ -6,14 +6,17 @@ import com.houtu.mp.module.base.mfa.MFAProcessor;
 import com.houtu.mp.module.base.mfa.MFASelector;
 import com.houtu.mp.module.base.request.MFASendRequest;
 import com.houtu.mp.module.base.request.MFAVerifyRequest;
+import com.houtu.mp.module.base.request.UserInfoUpdateRequest;
 import com.houtu.mp.module.base.request.UserUpdateMyselfPasswordRequest;
 import com.houtu.mp.module.base.service.UserService;
+import com.houtu.mp.module.base.vo.UserInfoVO;
 import com.houtu.mp.module.sys.dao.SysUserDao;
 import com.houtu.mp.module.sys.entity.SysUserEntity;
 import com.houtu.mp.module.sys.service.SysUserService;
 import com.houtu.mp.module.sys.service.impl.SysUserServiceImpl;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.util.OTPUtils;
+import com.houtu.util.common.BeanUtils;
 import com.houtu.web.model.response.ResponseData;
 import jakarta.annotation.Resource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -36,6 +39,32 @@ public class UserServiceImpl implements UserService {
     private SysUserServiceImpl sysLoginLogService;
 
     @Override
+    public UserInfoVO info() {
+        SimpleUser sessionUser = SessionContext.getSessionUser();
+        Long sessionUserId = sessionUser.getUserId();
+        SysUserEntity userEntity = sysLoginLogService.findById(sessionUserId);
+        return BeanUtils.copyProperties(userEntity, UserInfoVO.class);
+    }
+
+    @Transactional
+    @Override
+    public ResponseData updateUserInfo(UserInfoUpdateRequest request) {
+        SimpleUser sessionUser = SessionContext.getSessionUser();
+        Long sessionUserId = sessionUser.getUserId();
+        SysUserEntity updateEntity = new SysUserEntity();
+        updateEntity.setUserId(sessionUserId);
+        updateEntity.setNickName(request.getNickName());
+        updateEntity.setPhone(request.getPhone());
+        updateEntity.setEmail(request.getEmail());
+        updateEntity.setUpdateBy(sessionUserId);
+        updateEntity.setUpdateTime(LocalDateTime.now());
+        userDao.updateById(updateEntity);
+        sysLoginLogService.clearCache(sessionUserId);
+        return ResponseData.success();
+    }
+
+    @Transactional
+    @Override
     public ResponseData updateMyselfPassword(UserUpdateMyselfPasswordRequest request) {
         SimpleUser sessionUser = SessionContext.getSessionUser();
         Long sessionUserId = sessionUser.getUserId();
@@ -49,7 +78,7 @@ public class UserServiceImpl implements UserService {
         updateEntity.setUpdateBy(sessionUserId);
         updateEntity.setUpdateTime(LocalDateTime.now());
         userDao.updateById(updateEntity);
-        sysLoginLogService.clearCache(sessionUser.getUserId());
+        sysLoginLogService.clearCache(sessionUserId);
         return ResponseData.success();
     }
 
@@ -94,6 +123,7 @@ public class UserServiceImpl implements UserService {
         return ResponseData.success(OTPUtils.generateQRCode(sessionUser.getUsername(), sysUserEntity.getGoogleOTPKey()));
     }
 
+    @Transactional
     @Override
     public ResponseData<String> resetMyselfOTP() {
         SimpleUser sessionUser = SessionContext.getSessionUser();

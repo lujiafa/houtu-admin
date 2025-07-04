@@ -48,6 +48,7 @@ export const zhCn = {
         search: '查询',
         reset: '重置',
         prompt: '提示',
+        open: '开启',
         confirmDeleteDesc: '此操作将永久删除该数据, 您是否想继续？',
         openMFADesc: '此操作将开启MFA验证流程, 您是否想继续？',
         resetMFADesc: '此操作重置MFA, 您是否想继续？',
