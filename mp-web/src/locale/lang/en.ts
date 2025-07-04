@@ -7,11 +7,11 @@ import dictManage from '@/locale/lang/dict-manage/en'
 import paramsManage from '@/locale/lang/params-manage/en'
 import logLogin from '@/locale/lang/log-login/en'
 import logOperate from '@/locale/lang/log-operate/en'
+import userCenter from '@/locale/lang/user-center/zhCn'
 
 export const en = {
     systemName: '',
     welcome: 'Welcome',
-    userCenter: 'User Center',
     logout: 'Logout',
     updatePassword: 'Update Password',
     homeMenuName: 'Home',
@@ -99,4 +99,5 @@ export const en = {
     ...paramsManage,
     ...logLogin,
     ...logOperate,
+    ...userCenter,
 }

@@ -24,7 +24,7 @@ export default {
     },
     // 显示个人中心
     showUserCenter() {
-      this.store.applyModule(this.$router, new ModuleItem("userCenter", this.$t("userCenter"), [], "/index/info", [], true));
+      this.store.applyModule(this.$router, new ModuleItem("userCenter", this.$t("userCenter.moduleName"), [], "/index/info", [], true));
     },
     // 开通MFA验证功能
     openMFA() {
@@ -87,7 +87,7 @@ export default {
       <el-avatar src="src/assets/default-avatar.svg" class="v-lu-header-avatar"/>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="showUserCenter">{{ $t("userCenter") }}</el-dropdown-item>
+          <el-dropdown-item @click="showUserCenter">{{ $t("userCenter.moduleName") }}</el-dropdown-item>
           <el-dropdown-item v-if="showOpenMFA" @click="openMFA">{{ $t('common.open') }}MFA</el-dropdown-item>
           <el-dropdown-item v-if="mfaOTPEnabled" @click="displayMyOTP">{{ $t('common.my') }} OTP</el-dropdown-item>
           <el-dropdown-item @click="updatePassword">{{ $t("updatePassword") }}</el-dropdown-item>

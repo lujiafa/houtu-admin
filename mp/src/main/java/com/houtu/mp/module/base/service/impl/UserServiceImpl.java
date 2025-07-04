@@ -11,6 +11,9 @@ import com.houtu.mp.module.base.request.UserUpdateMyselfPasswordRequest;
 import com.houtu.mp.module.base.service.UserService;
 import com.houtu.mp.module.base.vo.UserInfoVO;
 import com.houtu.mp.module.sys.dao.SysUserDao;
+import com.houtu.mp.module.sys.dao.SysUserOrgDao;
+import com.houtu.mp.module.sys.dao.SysUserPostDao;
+import com.houtu.mp.module.sys.dao.SysUserRoleDao;
 import com.houtu.mp.module.sys.entity.SysUserEntity;
 import com.houtu.mp.module.sys.service.SysUserService;
 import com.houtu.mp.module.sys.service.impl.SysUserServiceImpl;
@@ -25,6 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -37,13 +42,26 @@ public class UserServiceImpl implements UserService {
     private SysUserService sysUserService;
     @Resource
     private SysUserServiceImpl sysLoginLogService;
+    @Resource
+    private SysUserOrgDao sysUserOrgDao;
+    @Resource
+    private SysUserRoleDao sysUserRoleDao;
+    @Resource
+    private SysUserPostDao sysUserPostDao;
 
     @Override
     public UserInfoVO info() {
         SimpleUser sessionUser = SessionContext.getSessionUser();
         Long sessionUserId = sessionUser.getUserId();
         SysUserEntity userEntity = sysLoginLogService.findById(sessionUserId);
-        return BeanUtils.copyProperties(userEntity, UserInfoVO.class);
+        UserInfoVO userInfoVO = BeanUtils.copyProperties(userEntity, UserInfoVO.class);
+        List<String> orgNames = sysUserOrgDao.selectUserOrgByUserId(sessionUserId).stream().map(map -> map.get("orgName")).toList();
+        userInfoVO.setOrgNames(orgNames);
+        List<String> postNames = sysUserPostDao.selectUserPostByUserId(sessionUserId).stream().map(map -> map.get("postName")).toList();
+        userInfoVO.setOrgPosts(postNames);
+        List<String> roleNames = sysUserRoleDao.selectUserRoleByUserId(sessionUserId).stream().map(map -> map.get("roleName")).toList();
+        userInfoVO.setRoleNames(roleNames);
+        return userInfoVO;
     }
 
     @Transactional

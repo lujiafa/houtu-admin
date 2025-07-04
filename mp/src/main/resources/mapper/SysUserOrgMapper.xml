@@ -8,9 +8,23 @@
         <id column="org_id" property="orgId" />
     </resultMap>
 
+    <resultMap id="SelectUserOrgResultMap" type="java.util.LinkedHashMap">
+        <id column="org_id" property="orgId" />
+        <id column="org_name" property="orgName" />
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         user_id, org_id
     </sql>
+
+    <select id="selectUserOrgByUserId" parameterType="java.lang.Long" resultType="java.util.List" resultMap="SelectUserOrgResultMap">
+        SELECT
+            org.org_id,
+            org.org_name
+        FROM sys_user_org userOrg
+                 INNER JOIN sys_org org ON userOrg.org_id = org.org_id
+        WHERE userOrg.user_id = #{userId}
+    </select>
 
 </mapper>
