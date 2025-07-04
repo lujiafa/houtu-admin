@@ -7,11 +7,11 @@ import dictManage from '@/locale/lang/dict-manage/zhCn'
 import paramsManage from '@/locale/lang/params-manage/zhCn'
 import logLogin from '@/locale/lang/log-login/zhCn'
 import logOperate from '@/locale/lang/log-operate/zhCn'
+import userCenter from '@/locale/lang/user-center/zhCn'
 
 export const zhCn = {
     systemName: '',
     welcome: '欢迎使用',
-    userCenter: '个人中心',
     logout: '退出登录',
     updatePassword: '修改密码',
     homeMenuName: '首页',
@@ -99,4 +99,5 @@ export const zhCn = {
     ...paramsManage,
     ...logLogin,
     ...logOperate,
+    ...userCenter,
 }

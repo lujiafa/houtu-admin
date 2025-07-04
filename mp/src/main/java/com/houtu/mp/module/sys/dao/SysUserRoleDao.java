@@ -3,6 +3,10 @@ package com.houtu.mp.module.sys.dao;
 import com.houtu.mp.module.sys.entity.SysUserRoleEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * sys_user_role Mapper 接口
@@ -12,5 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface SysUserRoleDao extends BaseMapper<SysUserRoleEntity> {
+
+    List<Map<Long, String>> selectUserRoleByUserId(@Param("userId") Long userId);
 
 }

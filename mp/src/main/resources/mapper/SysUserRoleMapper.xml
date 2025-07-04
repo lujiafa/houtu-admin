@@ -8,9 +8,23 @@
         <id column="role_id" property="roleId" />
     </resultMap>
 
+    <resultMap id="SelectUserRoleResultMap" type="java.util.LinkedHashMap">
+        <id column="role_id" property="role_id" />
+        <id column="role_name" property="roleName" />
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         user_id, role_id
     </sql>
+
+    <select id="selectUserRoleByUserId" parameterType="java.lang.Long" resultType="java.util.List" resultMap="SelectUserRoleResultMap">
+        SELECT
+            role.role_id,
+            role.role_name
+        FROM sys_user_role userRole
+                 INNER JOIN sys_role role ON userRole.role_id = role.role_id
+        WHERE userRole.user_id = #{userId}
+    </select>
 
 </mapper>

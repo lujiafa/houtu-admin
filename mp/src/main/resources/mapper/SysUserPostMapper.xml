@@ -8,9 +8,23 @@
         <id column="post_id" property="postId" />
     </resultMap>
 
+    <resultMap id="SelectUserPostResultMap" type="java.util.LinkedHashMap">
+        <id column="post_id" property="postId" />
+        <id column="post_name" property="postName" />
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         user_id, post_id
     </sql>
+
+    <select id="selectUserPostByUserId" parameterType="java.lang.Long" resultType="java.util.List" resultMap="SelectUserPostResultMap">
+        SELECT
+            post.post_id,
+            post.post_name
+        FROM sys_user_post userPost
+                 INNER JOIN sys_post post ON userPost.post_id = post.post_id
+        WHERE userPost.user_id = #{userId}
+    </select>
 
 </mapper>
