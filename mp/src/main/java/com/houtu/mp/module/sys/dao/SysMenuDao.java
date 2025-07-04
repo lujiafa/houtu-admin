@@ -24,4 +24,10 @@ public interface SysMenuDao extends BaseMapper<SysMenuEntity> {
      */
     List<SysMenuEntity> queryMenuByRoleIds(@Param("roleIds") List<Long> roleIds, @Param("status") Integer status, @Param("menuTypes") List<Integer> menuTypes);
 
+    /**
+     * 根据ID修改菜单
+     * @param sysMenuEntity 菜单对象
+     * @return 修改结果行数
+     */
+    int updateById(SysMenuEntity sysMenuEntity);
 }

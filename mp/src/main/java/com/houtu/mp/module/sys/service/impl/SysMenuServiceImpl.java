@@ -13,8 +13,12 @@ import com.houtu.mp.module.sys.service.SysMenuService;
 import com.houtu.mp.module.sys.vo.SysMenuQueryBaseVO;
 import com.houtu.mp.module.sys.vo.SysMenuQueryVO;
 import com.houtu.mp.support.SessionContext;
+import com.houtu.mp.support.type.MenuIconType;
+import com.houtu.mp.support.type.MenuPathType;
+import com.houtu.mp.support.type.MenuType;
 import com.houtu.web.model.response.ResponseData;
 import jakarta.annotation.Resource;
+import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -38,6 +42,8 @@ import java.util.stream.Stream;
  */
 @Service
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> implements SysMenuService {
+
+    static final String PERMS_REGEX_PATTERN = "^[a-zA-Z0-9_]+(:[a-zA-Z0-9_]+)+$";
 
     @Resource
     private SysRoleDao sysRoleDao;
@@ -71,31 +77,26 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 
     @Override
     public ResponseData save(SysMenuAddRequest request) {
-        if (request.getParentId() != 0
-                && baseMapper.selectOne(new QueryWrapper<SysMenuEntity>()
-                .eq("menu_id", request.getParentId())
-                .eq("deleted", 0)
-                .last("limit 1")) == null) {
-            return ResponseData.fail(ErrorCode.build(7, LocaleContextHolder.getLocale()));
-        }
+        ResponseData responseData = verifyAddForm(request);
+        if (!responseData.hasSuccess())
+            return responseData;
         SysMenuEntity sysMenuEntity = new SysMenuEntity();
         sysMenuEntity.setMenuName(request.getMenuName());
         sysMenuEntity.setParentId(request.getParentId());
         sysMenuEntity.setMenuType(request.getMenuType());
         sysMenuEntity.setSort(request.getSort());
         sysMenuEntity.setStatus(request.getStatus());
-        if (request.getMenuType() == 1 || request.getMenuType() == 2) {
+        if (MenuType.DIRECTORY.equals(request.getMenuType())) {
             sysMenuEntity.setIconType(request.getIconType());
             sysMenuEntity.setIcon(request.getIcon());
-        }
-        if (request.getMenuType() == 2) {
+        } else if (MenuType.MENU.equals(request.getMenuType())) {
+            sysMenuEntity.setIconType(request.getIconType());
+            sysMenuEntity.setIcon(request.getIcon());
             sysMenuEntity.setPathType(request.getPathType());
             sysMenuEntity.setPath(request.getPath());
-        }
-        if (request.getMenuType() == 2 || request.getMenuType() == 3) {
-            ResponseData responseData = verifyPerms(request.getMenuType(), request.getPerms());
-            if (!responseData.hasSuccess())
-                return responseData;
+            if (MenuPathType.NATIVE.equals(request.getPathType()))
+                sysMenuEntity.setPerms(request.getPerms());
+        } else if (MenuType.FUNCTION.equals(request.getMenuType())) {
             sysMenuEntity.setPerms(request.getPerms());
         }
         sysMenuEntity.setCreateBy(SessionContext.getSessionUserId());
@@ -110,27 +111,28 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
                 .eq("menu_id", request.getMenuId())
                 .eq("deleted", 0)
                 .last("limit 1"));
-        if (queryMenuEntity == null) {
-            return ResponseData.fail(ErrorCode.build(7, LocaleContextHolder.getLocale()));
-        }
+        if (queryMenuEntity == null)
+            return ResponseData.fail(ErrorCode.build(7));
+        ResponseData responseData = verifyUpdateForm(queryMenuEntity, request);
+        if (!responseData.hasSuccess())
+            return responseData;
         SysMenuEntity sysMenuEntity = new SysMenuEntity();
         sysMenuEntity.setMenuId(request.getMenuId());
         sysMenuEntity.setMenuName(request.getMenuName());
         sysMenuEntity.setParentId(request.getParentId());
         sysMenuEntity.setSort(request.getSort());
         sysMenuEntity.setStatus(request.getStatus());
-        if (queryMenuEntity.getMenuType() == 1 || queryMenuEntity.getMenuType() == 2) {
+        if (MenuType.DIRECTORY.equals(queryMenuEntity.getMenuType())) {
             sysMenuEntity.setIconType(request.getIconType());
             sysMenuEntity.setIcon(request.getIcon());
-        }
-        if (queryMenuEntity.getMenuType() == 2) {
+        } else if (MenuType.MENU.equals(queryMenuEntity.getMenuType())) {
+            sysMenuEntity.setIconType(request.getIconType());
+            sysMenuEntity.setIcon(request.getIcon());
             sysMenuEntity.setPathType(request.getPathType());
             sysMenuEntity.setPath(request.getPath());
-        }
-        if (queryMenuEntity.getMenuType() == 2 || queryMenuEntity.getMenuType() == 3) {
-            ResponseData responseData = verifyPerms(queryMenuEntity.getMenuType(), request.getPerms());
-            if (!responseData.hasSuccess())
-                return responseData;
+            if (MenuPathType.NATIVE.equals(request.getPathType()))
+                sysMenuEntity.setPerms(request.getPerms());
+        } else if (MenuType.FUNCTION.equals(queryMenuEntity.getMenuType())) {
             sysMenuEntity.setPerms(request.getPerms());
         }
         sysMenuEntity.setUpdateBy(SessionContext.getSessionUserId());
@@ -184,19 +186,95 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
     }
 
     /**
-     * 校验权限及其格式
-     * @param perms 权限
+     * 校验添加表单
+     * @param request 添加表单
      * @return 校验结果
      */
-    private ResponseData verifyPerms(Integer menuType, String perms) {
-        if (!Objects.equals(menuType, 3) && StringUtils.isEmpty(perms)) {
-            return ResponseData.success();
+    ResponseData verifyAddForm(@NotNull SysMenuAddRequest request) {
+        if (!Objects.equals(request.getParentId(), 0)
+                && baseMapper.selectOne(new QueryWrapper<SysMenuEntity>()
+                .eq("menu_id", request.getParentId())
+                .eq("deleted", 0)
+                .last("limit 1")) == null) {
+            return ResponseData.fail(ErrorCode.build(7));
         }
-        if (Objects.equals(menuType, 3) && StringUtils.isEmpty(perms)) {
-            return ResponseData.fail(ErrorCode.build(30, Stream.of("perms can't be empty").toArray()));
+        if (!MenuType.contains(request.getMenuType())) {
+            return ResponseData.fail(ErrorCode.build(30, Stream.of("menuType is invalid").toArray()));
         }
-        if (!perms.matches("^[a-zA-Z0-9_]+(:[a-zA-Z0-9_]+)+$")) {
-            return ResponseData.fail(ErrorCode.build(30, Stream.of("perms format error, perms must contain \":\" (e.g., system:user:query)").toArray()));
+        if (MenuType.DIRECTORY.equals(request.getMenuType())) {
+            if (!MenuIconType.contains(request.getIconType())) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("iconType is invalid").toArray()));
+            }
+            if (StringUtils.isBlank(request.getIcon())) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("icon can't be empty").toArray()));
+            }
+        } else if (MenuType.MENU.equals(request.getMenuType())) {
+            if (!MenuIconType.contains(request.getIconType())) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("iconType is invalid").toArray()));
+            }
+            if (StringUtils.isBlank(request.getIcon())) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("icon can't be empty").toArray()));
+            }
+            if (!MenuPathType.contains(request.getPathType())) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("pathType is invalid").toArray()));
+            }
+            if (StringUtils.isBlank(request.getPath())) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("path can't be empty").toArray()));
+            }
+            if (request.getPerms() != null && !request.getPerms().matches(PERMS_REGEX_PATTERN)) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("perms format error, perms must contain \":\" (e.g., system:user:query)").toArray()));
+            }
+        } else if (MenuType.FUNCTION.equals(request.getMenuType())) {
+            if (request.getPerms() == null) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("perms can't be empty").toArray()));
+            }
+            if (!request.getPerms().matches(PERMS_REGEX_PATTERN)) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("perms format error, perms must contain \":\" (e.g., system:user:query)").toArray()));
+            }
+        }
+        return ResponseData.success();
+    }
+
+    /**
+     * 验证修改表单
+     * @param sysMenuEntity 原始数据
+     * @param request 修改表单
+     * @return 验证结果
+     */
+    ResponseData verifyUpdateForm(@NotNull SysMenuEntity sysMenuEntity, @NotNull SysMenuUpdateRequest request) {
+        if (request.getParentId() != null
+                && !Objects.equals(request.getParentId(), 0)
+                && !request.getParentId().equals(sysMenuEntity.getParentId())
+                && baseMapper.selectOne(new QueryWrapper<SysMenuEntity>()
+                .eq("menu_id", request.getParentId())
+                .eq("deleted", 0)
+                .last("limit 1")) == null) {
+            return ResponseData.fail(ErrorCode.build(7));
+        }
+        if (MenuType.DIRECTORY.equals(sysMenuEntity.getMenuType())) {
+            // iconType 为空时，即不需要修改
+            if (request.getIconType() != null && !MenuIconType.contains(request.getIconType())) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("iconType is invalid").toArray()));
+            }
+        } else if (MenuType.MENU.equals(sysMenuEntity.getMenuType())) {
+            // iconType 为空时，即不需要修改
+            if (request.getIconType() != null && !MenuIconType.contains(request.getIconType())) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("iconType is invalid").toArray()));
+            }
+            // pathType 为空时，即不需要修改
+            if (request.getPathType() != null && !MenuPathType.contains(request.getPathType())) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("pathType is invalid").toArray()));
+            }
+            if (request.getPerms() != null && !request.getPerms().matches(PERMS_REGEX_PATTERN)) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("perms format error, perms must contain \":\" (e.g., system:user:query)").toArray()));
+            }
+        } else if (MenuType.FUNCTION.equals(sysMenuEntity.getMenuType())) {
+            if (request.getPerms() == null) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("perms can't be empty").toArray()));
+            }
+            if (!request.getPerms().matches(PERMS_REGEX_PATTERN)) {
+                return ResponseData.fail(ErrorCode.build(30, Stream.of("perms format error, perms must contain \":\" (e.g., system:user:query)").toArray()));
+            }
         }
         return ResponseData.success();
     }
