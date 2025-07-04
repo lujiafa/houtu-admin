@@ -59,6 +59,14 @@ export default {
     permsDelete() {
       return this.store.verifyActiveModulePerms('system:menu:delete');
     },
+    // 是否开启添加表单
+    hasAddForm() {
+      return this.formVisible && !this.formParams.menuId;
+    },
+    // 是否开启修改表单
+    hasUpdateForm() {
+      return this.formVisible && this.formParams.menuId;
+    }
   },
   methods: {
     handleAdd(row) {
@@ -156,7 +164,9 @@ export default {
               params.icon = formParams.icon;
               params.pathType = formParams.pathType;
               params.path = formParams.path;
-              params.perms = formParams.perms;
+              if (formParams.pathType === 1) {
+                params.perms = formParams.perms;
+              }
               break;
             case 3:
               params.perms = formParams.perms;
@@ -171,17 +181,32 @@ export default {
                 this.query();
               }).catch(() => {});
         } else {
-          ownerThis.$session.put("/api/sys/menu/update", {
+          let params = {
             menuId: formParams.menuId,
             menuName: formParams.menuName,
             parentId: formParams.parentId,
-            iconType: formParams.iconType,
-            icon: formParams.icon,
-            path: formParams.path,
             sort: formParams.sort,
             status: formParams.status,
-            perms: formParams.perms,
-          }).then(res => {
+          };
+          switch (formParams.menuType) {
+            case 1:
+              params.iconType = formParams.iconType;
+              params.icon = formParams.icon;
+              break;
+            case 2:
+              params.iconType = formParams.iconType;
+              params.icon = formParams.icon;
+              params.pathType = formParams.pathType;
+              params.path = formParams.path;
+              if (formParams.pathType === 1) {
+                params.perms = formParams.perms;
+              }
+              break;
+            case 3:
+              params.perms = formParams.perms;
+              break;
+          }
+          ownerThis.$session.put("/api/sys/menu/update", params).then(res => {
             ownerThis.$message({
               type: 'success',
               message: this.$i18n.t('common.updateSuccessDesc')
@@ -392,7 +417,7 @@ export default {
                       :rules="formValidRules.menuName">
           <el-input v-model="formParams.menuName"/>
         </el-form-item>
-        <el-form-item v-if="!formParams.menuId" :label="$t('menuManage.menuType')" prop="menuType" :rules="formValidRules.commonRequired">
+        <el-form-item v-if="hasAddForm" :label="$t('menuManage.menuType')" prop="menuType" :rules="formValidRules.commonRequired">
           <el-radio-group v-model.number="formParams.menuType">
             <el-radio v-for="item in formMenuTypes" :value="item.value" size="large" :disabled="item.disabled">
               {{ item.label }}
@@ -420,7 +445,7 @@ export default {
           </el-popover>
           <el-input v-else v-model="formParams.icon"/>
         </el-form-item>
-        <el-form-item v-if="!formParams.menuId && formParams.menuType === 2" :label="$t('menuManage.pathType')"
+        <el-form-item v-if="formParams.menuType === 2" :label="$t('menuManage.pathType')"
                       prop="pathType" :rules="formValidRules.commonRequired">
           <el-radio-group v-model.number="formParams.pathType">
             <el-radio :value="1" size="large">{{ $t('menuManage.pathType_1') }}</el-radio>
@@ -431,7 +456,7 @@ export default {
                       prop="path" :rules="formValidRules.commonRequired">
           <el-input v-model="formParams.path"/>
         </el-form-item>
-        <el-form-item v-if="formParams.menuType === 2 || formParams.menuType === 3" :label="$t('menuManage.perms')"
+        <el-form-item v-if="(formParams.menuType === 2 && formParams.pathType === 1) || formParams.menuType === 3" :label="$t('menuManage.perms')"
                       prop="perms" :rules="formParams.menuType === 3 ? formValidRules.commonRequired : ()=>{}">
           <el-input v-model="formParams.perms"/>
         </el-form-item>

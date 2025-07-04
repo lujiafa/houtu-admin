@@ -51,4 +51,36 @@
         order by `sort`
     </select>
 
+    <update id="updateById" parameterType="com.houtu.mp.module.sys.entity.SysMenuEntity">
+        update sys_menu set
+        perms=#{perms},
+        <if test="menuName != null">
+            menu_name = #{menuName},
+        </if>
+        <if test="parentId != null">
+            parent_id = #{parentId},
+        </if>
+        <if test="sort != null">
+            sort = #{sort},
+        </if>
+        <if test="status != null">
+            status = #{status},
+        </if>
+        <if test="pathType != null">
+            path_type = #{pathType},
+        </if>
+        <if test="path != null">
+            path = #{path},
+        </if>
+        <if test="iconType != null">
+            icon_type = #{iconType},
+        </if>
+        <if test="icon != null">
+            icon = #{icon},
+        </if>
+        update_time = #{updateTime},
+        update_by = #{updateBy}
+        where menu_id = #{menuId}
+    </update>
+
 </mapper>

@@ -1,12 +1,14 @@
 package com.houtu.mp.support.type;
 
+import java.util.Arrays;
+
 public enum MenuType {
 
     DIRECTORY(1, "Directory"),
 
     MENU(2, "Menu"),
 
-    BUTTON(2, "Function/Button");
+    FUNCTION(3, "Function/Button");
 
     private Integer menuType;
     private String menuTypeDesc;
@@ -26,5 +28,11 @@ public enum MenuType {
 
     public boolean equals(Integer menuType) {
         return this.menuType.equals(menuType);
+    }
+
+    public static boolean contains(Integer menuType) {
+        if (menuType == null)
+            return false;
+        return Arrays.stream(values()).parallel().anyMatch(p -> p.equals(menuType));
     }
 }

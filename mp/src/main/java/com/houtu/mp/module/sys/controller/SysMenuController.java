@@ -37,22 +37,6 @@ public class SysMenuController {
     @PreAuthorize("hasAuthority('system:menu:add')")
     @PostMapping("/add")
     public ResponseData add(@Validated SysMenuAddRequest request) {
-        if (request.getMenuType() == 1 || request.getMenuType() == 2) {
-            if (request.getIconType() == null) {
-                return ResponseData.fail(ErrorCode.build(30, Stream.of("iconType can't be null").toArray()));
-            }
-            if (request.getIcon() == null || request.getIcon().trim().length() == 0) {
-                return ResponseData.fail(ErrorCode.build(30, Stream.of("icon can't be null").toArray()));
-            }
-        }
-        if (request.getMenuType() == 2) {
-            if (request.getPathType() == null) {
-                return ResponseData.fail(ErrorCode.build(30, Stream.of("pathType can't be null").toArray()));
-            }
-            if (request.getPath() == null || request.getPath().trim().length() == 0) {
-                return ResponseData.fail(ErrorCode.build(30, Stream.of("path can't be empty").toArray()));
-            }
-        }
         return menuService.save(request);
     }
 
