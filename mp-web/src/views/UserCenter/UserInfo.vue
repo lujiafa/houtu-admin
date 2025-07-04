@@ -91,92 +91,108 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="v-lu-user-info v-lu-show-user-info">
-    <div class="v-lu-user-info-container">
-      <el-form-item :label="$t('userManage.userName')">
-        {{ userInfo.userName }}
-      </el-form-item>
-      <el-form-item :label="$t('userManage.nickName')">
-        {{ userInfo.nickName }}
-      </el-form-item>
-      <el-form-item :label="$t('userManage.phone')">
-        {{ showUserPhone }}
-      </el-form-item>
-      <el-form-item :label="$t('userManage.email')">
-        {{ showUserEmail }}
-      </el-form-item>
-      <el-form-item :label="$t('userCenter.roleName')">
-        {{ showUserRoleNames }}
-      </el-form-item>
-      <el-form-item :label="$t('userCenter.orgName')">
-        {{ showUserOrgNames }}
-      </el-form-item>
-      <el-form-item :label="$t('userCenter.postName')">
-        {{ showUserPostNames }}
-      </el-form-item>
-      <el-form-item :label="$t('common.createTime')">
-        {{ userInfo.createTime }}
-      </el-form-item>
-    </div>
-  </div>
-  <div class="v-lu-user-info v-lu-update-user-info">
-    <el-form ref="formRef"
-             :model="formParams"
-             :label-position="'left'">
-      <el-form-item :label="$t('userManage.nickName')" prop="nickName" :rules="formValidRules.nickName">
-        <el-input type="nickName" v-model="formParams.nickName"/>
-      </el-form-item>
-      <el-form-item :label="$t('userManage.phone')" prop="nickName">
-        <el-input type="phone" v-model="formParams.phone"/>
-      </el-form-item>
-      <el-form-item :label="$t('userManage.email')" prop="nickName">
-        <el-input type="email" v-model="formParams.email"/>
-      </el-form-item>
-      <div class="v-lu-update-user-info-btn-container">
-        <el-button type="primary" class="v-lu-update-user-info-btn" @click="formReset">{{
-            $t('common.reset')
-          }}
-        </el-button>
-        <el-button type="primary" class="v-lu-update-user-info-btn" @click="formSave">{{
-            $t('common.confirm')
-          }}
-        </el-button>
+  <div class="v-lu-userinfo-center v-lu-fill">
+    <div class="v-lu-show-userinfo">
+      <div class="v-lu-show-userinfo-panel">
+        <el-form-item :label="$t('userManage.userName')">
+          {{ userInfo.userName }}
+        </el-form-item>
+        <el-form-item :label="$t('userManage.nickName')">
+          {{ userInfo.nickName }}
+        </el-form-item>
+        <el-form-item :label="$t('userManage.phone')">
+          {{ showUserPhone }}
+        </el-form-item>
+        <el-form-item :label="$t('userManage.email')">
+          {{ showUserEmail }}
+        </el-form-item>
+        <el-form-item :label="$t('userCenter.roleName')">
+          {{ showUserRoleNames }}
+        </el-form-item>
+        <el-form-item :label="$t('userCenter.orgName')">
+          {{ showUserOrgNames }}
+        </el-form-item>
+        <el-form-item :label="$t('userCenter.postName')">
+          {{ showUserPostNames }}
+        </el-form-item>
+        <el-form-item :label="$t('common.createTime')">
+          {{ userInfo.createTime }}
+        </el-form-item>
       </div>
-    </el-form>
+    </div>
+    <div class="v-lu-update-userinfo">
+      <el-form ref="formRef"
+               :model="formParams"
+               :label-position="'left'">
+        <el-form-item :label="$t('userManage.nickName')" prop="nickName" :rules="formValidRules.nickName">
+          <el-input type="nickName" v-model="formParams.nickName"/>
+        </el-form-item>
+        <el-form-item :label="$t('userManage.phone')" prop="nickName">
+          <el-input type="phone" v-model="formParams.phone"/>
+        </el-form-item>
+        <el-form-item :label="$t('userManage.email')" prop="nickName">
+          <el-input type="email" v-model="formParams.email"/>
+        </el-form-item>
+        <div class="v-lu-update-userinfo-btn-container">
+          <el-button type="primary" class="v-lu-update-userinfo-btn" @click="formReset">{{
+              $t('common.reset')
+            }}
+          </el-button>
+          <el-button type="primary" class="v-lu-update-userinfo-btn" @click="formSave">{{
+              $t('common.confirm')
+            }}
+          </el-button>
+        </div>
+      </el-form>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.v-lu-user-info {
-  float: left;
-  min-width: 320px;
+.v-lu-userinfo-center {
+  display: block;
+
+  > div {
+    float: left;
+  }
 }
 
-.v-lu-show-user-info {
+
+.v-lu-show-userinfo {
   background: #eee;
+  width: 360px;
+  height: 100%;
+  margin: 0px;
 
-  .v-lu-user-info-container {
-    padding-top: 50px;
-    padding-left: 30px;
+  .v-lu-show-userinfo-panel {
+    width: 320px;
+    padding: 0px 10px 0px 30px;
+    margin: 30px auto 0px;
   }
 }
 
-@media screen and (max-width: 720px) {
-  .v-lu-show-user-info {
-    display: none !important;
+.v-lu-update-userinfo {
+  width: calc(100% - 390px);
+  height: 100%;
+  min-width: 300px;
+  display: flex;
+
+  > form {
+    margin: auto;
   }
 }
 
-.v-lu-update-user-info {
-  padding: 0px 15px;
-  margin: auto;
+@media screen  and (max-width: 839px) {
+  .v-lu-show-userinfo, .v-lu-update-userinfo {
+    width: 100%;
+  }
 }
 
-.v-lu-update-user-info-btn-container {
+.v-lu-update-userinfo-btn-container {
   display: flex;
   justify-content: space-between;
 
-  .v-lu-update-user-info-btn {
+  .v-lu-update-userinfo-btn {
     width: 40%;
   }
 }
