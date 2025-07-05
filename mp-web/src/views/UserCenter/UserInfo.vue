@@ -154,6 +154,7 @@ export default defineComponent({
 
   > div {
     float: left;
+    min-height: 520px;
   }
 }
 
@@ -163,6 +164,7 @@ export default defineComponent({
   width: 360px;
   height: 100%;
   margin: 0px;
+  box-shadow: 0px 0px 8px 0px black;
 
   .v-lu-show-userinfo-panel {
     width: 320px;
@@ -182,18 +184,60 @@ export default defineComponent({
   }
 }
 
-@media screen  and (max-width: 839px) {
-  .v-lu-show-userinfo, .v-lu-update-userinfo {
-    width: 100%;
-  }
-}
-
 .v-lu-update-userinfo-btn-container {
   display: flex;
   justify-content: space-between;
 
   .v-lu-update-userinfo-btn {
     width: 40%;
+  }
+}
+
+@media screen and (max-width: 839px) {
+  .v-lu-show-userinfo {
+    width: 320px;
+
+    .v-lu-show-userinfo-panel {
+      width: 280px;
+    }
+  }
+}
+
+@media screen and (max-width: 799px) {
+  .v-lu-show-userinfo {
+    width: 300px;
+
+    .v-lu-show-userinfo-panel {
+      width: 260px;
+    }
+  }
+}
+
+@media screen and (max-width: 779px) {
+  .v-lu-show-userinfo {
+    width: 260px;
+
+    .v-lu-show-userinfo-panel {
+      width: 240px;
+      padding: 0px 5px 0px 15px;
+    }
+  }
+}
+
+@media screen and (max-width: 739px) {
+  .v-lu-show-userinfo {
+    width: 100%;
+    min-width: 280px;
+
+    .v-lu-show-userinfo-panel {
+      width: calc(100% - 40px);
+      max-width: 320px;
+      padding: 0px 10px 0px 30px;
+    }
+  }
+  .v-lu-update-userinfo {
+    width: 100%;
+    min-width: 280px;
   }
 }
 </style>
