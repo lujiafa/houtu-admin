@@ -7,11 +7,11 @@ public final class SecuritySupport {
 
     /**
      * 是否为超级管理员
-     * @param originRolePerms 原角色权限编码
+     * @param rolePerms 原角色权限编码
      * @return boolean
      */
-    public static boolean hasAdmin(String originRolePerms) {
-        return ROLE_ADMIN_NAME.equalsIgnoreCase(originRolePerms);
+    public static boolean hasAdmin(String rolePerms) {
+        return ROLE_ADMIN_NAME.equalsIgnoreCase(rolePerms);
     }
 
 

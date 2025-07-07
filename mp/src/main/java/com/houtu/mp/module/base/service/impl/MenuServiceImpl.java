@@ -1,9 +1,9 @@
 package com.houtu.mp.module.base.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.mp.module.base.service.MenuService;
 import com.houtu.mp.module.base.vo.ShowMenuVO;
-import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.mp.module.sys.dao.SysMenuDao;
 import com.houtu.mp.module.sys.dao.SysRoleDao;
 import com.houtu.mp.module.sys.entity.SysMenuEntity;
@@ -16,7 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,14 +37,14 @@ public class MenuServiceImpl implements MenuService {
             sysMenuEntities = sysMenuDao.selectList(new QueryWrapper<SysMenuEntity>()
                     .eq("status", 1)
                     .eq("deleted", 0)
-                    .in("menu_type", 1, 2, 3)
+                    .in("menu_type", Arrays.stream(MenuType.values()).map(mt -> mt.getMenuType()).toArray())
                     .orderByAsc("sort"));
         } else {
             List<SysRoleEntity> sysRoleEntityList = sysRoleDao.queryUserRoleList(sessionUser.getUserId(), 1);
             if (sysRoleEntityList == null || sysRoleEntityList.isEmpty()) {
                 return List.of();
             }
-            sysMenuEntities = sysMenuDao.queryMenuByRoleIds(sysRoleEntityList.parallelStream().map(SysRoleEntity::getRoleId).toList(), 1, List.of(1, 2, 3));
+            sysMenuEntities = sysMenuDao.queryMenuByRoleIds(sysRoleEntityList.parallelStream().map(SysRoleEntity::getRoleId).toList(), 1, Arrays.stream(MenuType.values()).map(mt -> mt.getMenuType()).toList());
             if (sysMenuEntities == null || sysMenuEntities.isEmpty()) {
                 return List.of();
             }

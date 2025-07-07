@@ -22,12 +22,16 @@ import java.util.List;
 public interface SysMenuService extends IService<SysMenuEntity> {
 
     /**
-     * 查询菜单列表并仅返回简单信息
+     * 查询用户已获得的菜单列表，超管拥有所有，普通用户根据授权信息获取
+     * @return 列表
+     */
+    List<SysMenuQueryBaseVO> queryUserObtainedList();
+
+    /**
+     * 分页查询列表
      * @param request 参数
      * @return 列表
      */
-    List<SysMenuQueryBaseVO> queryBaseList(SysMenuQueryRequest request);
-
     List<SysMenuQueryVO> queryList(SysMenuQueryRequest request);
 
 

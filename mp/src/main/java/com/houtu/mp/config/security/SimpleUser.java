@@ -32,14 +32,14 @@ public class SimpleUser extends User {
 
     private final Map<String, Object> attrs = new HashMap<>();
 
-    public SimpleUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public SimpleUser(String username, String password, boolean admin, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
-        this.admin = authorities.parallelStream().anyMatch(grantedAuthority -> SecuritySupport.ROLE_ADMIN_NAME.equalsIgnoreCase(grantedAuthority.getAuthority()));
+        this.admin = admin;
     }
 
-    public SimpleUser(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+    public SimpleUser(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, boolean admin, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-        this.admin = authorities.parallelStream().anyMatch(grantedAuthority -> SecuritySupport.ROLE_ADMIN_NAME.equalsIgnoreCase(grantedAuthority.getAuthority()));
+        this.admin = admin;
     }
 
 }
