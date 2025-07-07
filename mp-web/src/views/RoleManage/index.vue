@@ -23,7 +23,7 @@ export default {
       formVisible: false,
       formTitle: '',
       formTreeData: [],
-      formMenuTypeAdmin: false,
+      formHasAdmin: false,
       formParams: {},
     }
   },
@@ -77,7 +77,7 @@ export default {
       };
       this.formTitle = this.$i18n.t("common.add");
       this.formVisible = true;
-      this.resetFormMenuTree(undefined, []);
+      this.rolePermsChange(undefined, []);
     },
     handleEdit(row) {
       if ((!row || row instanceof Event) && this.selectRows.length === 1) {
@@ -95,7 +95,7 @@ export default {
       };
       this.formTitle = this.$i18n.t("common.edit");
       this.formVisible = true;
-      this.resetFormMenuTree(row.rolePerms, [...row.menuIds]);
+      this.rolePermsChange(row.rolePerms, [...row.menuIds]);
     },
     handleDelete(row) {
       let delIds = [];
@@ -156,23 +156,25 @@ export default {
     handleSelectRowsEvent(rows) {
       this.selectRows = rows;
     },
-    // 初始化Form表单中菜单Tree
-    resetFormMenuTree(rolePerms, menuIds) {
-      this.formMenuTypeAdmin = /^admin$/i.test(rolePerms);
-      if (this.formTreeData.length === 0) {
-        this.$session.get("/api/sys/role/menuList")
-            .then(res => {
-              let menuTreeData = res.data || [];
-              this.toolParseFormMenuTreeData(menuTreeData, []);
-              this.formTreeData = menuTreeData;
-              if (!this.formMenuTypeAdmin) {
-                this.$nextTick(() => {
-                  this.$refs.formTreeRef.setCheckedKeys(menuIds || [], false)
-                });
-              }
-            }).catch(()=>{});
-      } else {
-        if (!this.formMenuTypeAdmin) {
+    // 角色权限值改变时触发事件
+    rolePermsChange(rolePerms, menuIds) {
+      // 判断角色权限标识是否指定为超级管理员(admin)
+      this.formHasAdmin = /^admin$/i.test(rolePerms);
+      // 超级管理员无标注需菜单权限即拥有全部权限，仅对非超级管理员角色时才进行菜单权限设置
+      if (!this.formHasAdmin) {
+        if (this.formTreeData.length === 0) {
+          this.$session.get("/api/sys/role/menuList")
+              .then(res => {
+                let menuTreeData = res.data || [];
+                this.toolParseFormMenuTreeData(menuTreeData, []);
+                this.formTreeData = menuTreeData;
+                if (!this.formHasAdmin && menuIds && menuIds.length > 0) {
+                  this.$nextTick(() => {
+                    this.$refs.formTreeRef.setCheckedKeys(menuIds || [], false)
+                  });
+                }
+              }).catch(()=>{});
+        } else {
           this.$nextTick(() => {
             this.$refs.formTreeRef.setCheckedKeys(menuIds || [], false)
           });
@@ -215,7 +217,7 @@ export default {
     },
     // Form表单保存
     formSave() {
-      let menuIds = this.formMenuTypeAdmin ? [] : this.$refs.formTreeRef.getCheckedKeys();
+      let menuIds = this.formHasAdmin ? [] : this.$refs.formTreeRef.getCheckedKeys();
       let ownerThis = this;
       this.$refs.formRef.validate((valid, err) => {
         if (!valid) return;
@@ -340,7 +342,7 @@ export default {
         <el-input v-model="formParams.roleName"/>
       </el-form-item>
       <el-form-item :label="$t('roleManage.rolePerms')" prop="rolePerms" required :rules="formValidRules.rolePerms">
-        <el-input v-model="formParams.rolePerms" @change="resetFormMenuTree(formParams.rolePerms, formParams.menuIds)"/>
+        <el-input v-model="formParams.rolePerms" @change="rolePermsChange(formParams.rolePerms, formParams.menuIds)"/>
       </el-form-item>
       <el-form-item :label="$t('roleManage.sort')" prop="sort" required>
         <el-input-number v-model="formParams.sort" :step="1" :min="0" :max="1000"/>
@@ -360,7 +362,8 @@ export default {
             type="textarea"
         />
       </el-form-item>
-      <el-form-item v-if="!formMenuTypeAdmin" :label="$t('roleManage.roleMenus')" prop="menus">
+      <!-- 超管角色不需要设置角色菜单 -->
+      <el-form-item v-if="!formHasAdmin" :label="$t('roleManage.roleMenus')" prop="menus">
         <div class="v-lu-form-tree">
           <el-tree
               ref="formTreeRef"

@@ -160,7 +160,7 @@ export default defineComponent({
 
 
 .v-lu-show-userinfo {
-  background: #eee;
+  background: #f9f9f9;
   width: 360px;
   height: 100%;
   margin: 0px;

@@ -40,8 +40,7 @@ public class SysRoleController {
     @PreAuthorize("hasAuthority('system:role:add') || hasAuthority('system:role:update')")
     @GetMapping("/menuList")
     public ResponseData<List<SysMenuQueryBaseVO>> menuList() {
-        SysMenuQueryRequest request = new SysMenuQueryRequest();
-        return ResponseData.success(menuService.queryBaseList(request));
+        return ResponseData.success(menuService.queryUserObtainedList());
     }
 
     @OperateLog(moduleType = ModuleType.ROLE, operateType = OperateType.ADD)

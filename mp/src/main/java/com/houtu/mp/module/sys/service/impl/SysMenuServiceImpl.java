@@ -3,9 +3,11 @@ package com.houtu.mp.module.sys.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.houtu.core.exception.ErrorCode;
+import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.mp.module.sys.dao.SysMenuDao;
 import com.houtu.mp.module.sys.dao.SysRoleDao;
 import com.houtu.mp.module.sys.entity.SysMenuEntity;
+import com.houtu.mp.module.sys.entity.SysRoleEntity;
 import com.houtu.mp.module.sys.request.SysMenuAddRequest;
 import com.houtu.mp.module.sys.request.SysMenuQueryRequest;
 import com.houtu.mp.module.sys.request.SysMenuUpdateRequest;
@@ -13,6 +15,7 @@ import com.houtu.mp.module.sys.service.SysMenuService;
 import com.houtu.mp.module.sys.vo.SysMenuQueryBaseVO;
 import com.houtu.mp.module.sys.vo.SysMenuQueryVO;
 import com.houtu.mp.support.SessionContext;
+import com.houtu.mp.support.type.CommonStatus;
 import com.houtu.mp.support.type.MenuIconType;
 import com.houtu.mp.support.type.MenuPathType;
 import com.houtu.mp.support.type.MenuType;
@@ -49,23 +52,35 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
     private SysRoleDao sysRoleDao;
 
     @Override
-    public List<SysMenuQueryBaseVO> queryBaseList(SysMenuQueryRequest request) {
-        return getChildren(0L, queryListCommon(request), SysMenuQueryBaseVO.class);
+    public List<SysMenuQueryBaseVO> queryUserObtainedList() {
+        SimpleUser sessionUser = SessionContext.getSessionUser();
+        List<SysMenuEntity> sysMenuList;
+        if (sessionUser.isAdmin()) {
+            sysMenuList = baseMapper.selectList(new QueryWrapper<SysMenuEntity>()
+                    .eq("deleted", 0)
+                    .eq("status", CommonStatus.ENABLED.getStatus())
+                    .orderByAsc("sort"));
+        } else {
+            sysMenuList = new ArrayList<>();
+            List<SysRoleEntity> sysRoleList = sysRoleDao.queryUserRoleList(sessionUser.getUserId(), CommonStatus.ENABLED.getStatus());
+            if (sysRoleList != null && !sysRoleList.isEmpty()) {
+                List<SysMenuEntity> sysMenuEntities = baseMapper.queryMenuByRoleIds(sysRoleList.parallelStream().map(SysRoleEntity::getRoleId).toList(), CommonStatus.ENABLED.getStatus(), null);
+                sysMenuList.addAll(sysMenuEntities);
+            }
+        }
+        Map<Long, List<SysMenuEntity>> menuParentMap = sysMenuList.stream().collect(Collectors.groupingBy(SysMenuEntity::getParentId));
+        return getChildren(0L, menuParentMap, SysMenuQueryBaseVO.class);
     }
 
     @Override
     public List<SysMenuQueryVO> queryList(SysMenuQueryRequest request) {
-        return getChildren(0L, queryListCommon(request), SysMenuQueryVO.class);
-    }
-
-    private Map<Long, List<SysMenuEntity>> queryListCommon(SysMenuQueryRequest request) {
         List<SysMenuEntity> sysMenuEntities = baseMapper.selectList(new QueryWrapper<SysMenuEntity>()
                 .eq("deleted", 0)
                 .likeRight(request != null && StringUtils.isNotBlank(request.getMenuName()), "menu_name", request.getMenuName())
                 .eq(request != null && request.getStatus() != null, "status", request.getStatus())
                 .orderByAsc("sort"));
         Map<Long, List<SysMenuEntity>> menuParentEntityMap = sysMenuEntities.stream().collect(Collectors.groupingBy(SysMenuEntity::getParentId));
-        return menuParentEntityMap;
+        return getChildren(0L, menuParentEntityMap, SysMenuQueryVO.class);
     }
 
     @Override
@@ -187,6 +202,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 
     /**
      * 校验添加表单
+     *
      * @param request 添加表单
      * @return 校验结果
      */
@@ -237,8 +253,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 
     /**
      * 验证修改表单
+     *
      * @param sysMenuEntity 原始数据
-     * @param request 修改表单
+     * @param request       修改表单
      * @return 验证结果
      */
     ResponseData verifyUpdateForm(@NotNull SysMenuEntity sysMenuEntity, @NotNull SysMenuUpdateRequest request) {

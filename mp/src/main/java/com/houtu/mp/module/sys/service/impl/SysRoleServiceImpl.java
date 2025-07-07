@@ -3,6 +3,7 @@ package com.houtu.mp.module.sys.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.mp.module.sys.dao.*;
 import com.houtu.mp.module.sys.entity.*;
 import com.houtu.mp.module.sys.service.SysRoleService;
@@ -105,8 +106,10 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRoleEntity> i
         if (num <= 0) {
             return ResponseData.fail(ErrorCode.build(4, LocaleContextHolder.getLocale()));
         }
-        Long roleId = entity.getRoleId();
-        if (request.getMenuIds() != null && request.getMenuIds().size() > 0) {
+        if (!SecuritySupport.hasAdmin(request.getRolePerms())
+                && request.getMenuIds() != null
+                && request.getMenuIds().size() > 0) {
+            Long roleId = entity.getRoleId();
             List<SysRoleMenuEntity> roleMenuEntities = request.getMenuIds().stream().map(m -> {
                 SysRoleMenuEntity roleMenuEntity = new SysRoleMenuEntity();
                 roleMenuEntity.setMenuId(m);
@@ -123,29 +126,34 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRoleEntity> i
     public ResponseData update(SysRoleUpdateRequest request) {
         SysRoleEntity entity = new SysRoleEntity();
         BeanUtils.copyProperties(request, entity);
-        entity.setUpdateBy(SessionContext.getSessionUserId());
+        entity.setUpdateBy(SessionContext.getSessionUser().getUserId());
         entity.setUpdateTime(LocalDateTime.now());
         int num = baseMapper.updateById(entity);
         if (num <= 0) {
             return ResponseData.fail(ErrorCode.build(4, LocaleContextHolder.getLocale()));
         }
-        List<Long> existsMenuIds = sysRoleMenuDao.selectList(new QueryWrapper<SysRoleMenuEntity>().eq("role_id", request.getRoleId())).stream().map(p -> p.getMenuId()).toList();
-        List<Long> reqMenuIds = request.getMenuIds() == null ? List.of() : request.getMenuIds();
-        List<Long> delMenuIds = existsMenuIds.stream().filter(p -> !reqMenuIds.contains(p)).toList();
-        List<Long> addMenuIds = reqMenuIds.stream().filter(p -> !existsMenuIds.contains(p)).toList();
-        if (delMenuIds.size() > 0) {
+        if (SecuritySupport.hasAdmin(request.getRolePerms())) {
             sysRoleMenuDao.delete(new QueryWrapper<SysRoleMenuEntity>()
-                    .eq("role_id", request.getRoleId())
-                    .in("menu_id", delMenuIds));
-        }
-        if (addMenuIds.size() > 0) {
-            List<SysRoleMenuEntity> roleMenuEntities = addMenuIds.stream().map(m -> {
-                SysRoleMenuEntity roleMenuEntity = new SysRoleMenuEntity();
-                roleMenuEntity.setMenuId(m);
-                roleMenuEntity.setRoleId(request.getRoleId());
-                return roleMenuEntity;
-            }).toList();
-            sysRoleMenuDao.insert(roleMenuEntities);
+                    .eq("role_id", request.getRoleId()));
+        } else {
+            List<Long> existsMenuIds = sysRoleMenuDao.selectList(new QueryWrapper<SysRoleMenuEntity>().eq("role_id", request.getRoleId())).stream().map(p -> p.getMenuId()).toList();
+            List<Long> reqMenuIds = request.getMenuIds() == null ? List.of() : request.getMenuIds();
+            List<Long> delMenuIds = existsMenuIds.stream().filter(p -> !reqMenuIds.contains(p)).toList();
+            List<Long> addMenuIds = reqMenuIds.stream().filter(p -> !existsMenuIds.contains(p)).toList();
+            if (delMenuIds.size() > 0) {
+                sysRoleMenuDao.delete(new QueryWrapper<SysRoleMenuEntity>()
+                        .eq("role_id", request.getRoleId())
+                        .in("menu_id", delMenuIds));
+            }
+            if (addMenuIds.size() > 0) {
+                List<SysRoleMenuEntity> roleMenuEntities = addMenuIds.stream().map(m -> {
+                    SysRoleMenuEntity roleMenuEntity = new SysRoleMenuEntity();
+                    roleMenuEntity.setMenuId(m);
+                    roleMenuEntity.setRoleId(request.getRoleId());
+                    return roleMenuEntity;
+                }).toList();
+                sysRoleMenuDao.insert(roleMenuEntities);
+            }
         }
         return ResponseData.success();
     }
