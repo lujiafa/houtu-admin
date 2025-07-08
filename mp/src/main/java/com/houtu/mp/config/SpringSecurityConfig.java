@@ -1,5 +1,6 @@
 package com.houtu.mp.config;
 
+import com.houtu.core.exception.BusinessException;
 import com.houtu.mp.module.base.service.LoginLogService;
 import com.houtu.mp.support.type.LoginType;
 import com.houtu.mp.util.ResponseUtils;
@@ -10,6 +11,7 @@ import com.houtu.mp.config.security.MFAAuthorizationManager;
 import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.web.model.response.ResponseData;
 import jakarta.servlet.DispatcherType;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +29,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 @Configuration
 @EnableMethodSecurity
@@ -79,7 +84,7 @@ public class SpringSecurityConfig {
                             // 登录认证成功
                             .successHandler((req, resp, auth) -> {
                                 if (securityProperties.isMfa() && ((SimpleUser) auth.getPrincipal()).isEnableMFA()) {
-                                    ResponseUtils.responseJson(resp, ResponseData.fail(ErrorCode.build(13,req.getLocale())));
+                                    ResponseUtils.responseJson(resp, ResponseData.fail(ErrorCode.build(13, req.getLocale())));
                                 } else {
                                     ResponseUtils.responseJson(resp, ResponseData.success(req.getLocale()));
                                     // 登录成功记录登录日志
@@ -88,7 +93,12 @@ public class SpringSecurityConfig {
                             })
                             // 登录认证失败
                             .failureHandler((req, resp, ex) -> {
-                                ResponseUtils.responseJson(resp, ResponseData.fail(ErrorCode.build(12, req.getLocale())));
+                                Optional exceptionOptional = Arrays.stream(ExceptionUtils.getThrowables(ex)).filter(e -> e instanceof BusinessException).findFirst();
+                                if (exceptionOptional.isEmpty()) {
+                                    ResponseUtils.responseJson(resp, ResponseData.fail(ErrorCode.build(12, req.getLocale())));
+                                } else {
+                                    ResponseUtils.responseJson(resp, ResponseData.fail(((BusinessException) exceptionOptional.get()).getErrorCode()));
+                                }
                             })
                     ;
                 })
