@@ -27,7 +27,7 @@
     </sql>
 
     <select id="queryPage" resultMap="BaseResultMap">
-        select
+        select distinct
         <include refid="Base_Column_List"/>
         from sys_user su
         <if test="params.orgIds != null and params.orgIds.size() > 0">

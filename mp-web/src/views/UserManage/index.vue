@@ -327,6 +327,7 @@ export default {
         });
       }
     },
+    // 初始化加载当前用户是否是超级管理员
     initLoadMyselfHasAdmin() {
       this.$session.get('/api/sys/user/adm').then(res => {
         this.myselfIsAdmin = res.data;

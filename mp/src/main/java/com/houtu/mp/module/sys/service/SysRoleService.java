@@ -6,7 +6,7 @@ import com.houtu.mp.module.sys.request.SysRoleAddRequest;
 import com.houtu.mp.module.sys.request.SysRoleQueryRequest;
 import com.houtu.mp.module.sys.request.SysRoleUpdateRequest;
 import com.houtu.web.model.vo.PageDataVO;
-import com.houtu.mp.module.sys.vo.SysRoleQueryBaseVO;
+import com.houtu.mp.module.sys.vo.SysRoleQueryUserOperableVO;
 import com.houtu.mp.module.sys.vo.SysRoleQueryVO;
 import com.houtu.web.model.response.ResponseData;
 
@@ -22,7 +22,11 @@ import java.util.List;
  */
 public interface SysRoleService extends IService<SysRoleEntity> {
 
-    List<SysRoleQueryBaseVO> queryBaseList(SysRoleQueryRequest request);
+    /**
+     * 查询用户可操作的角色列表
+     * @return List<SysRoleQueryBaseVO>
+     */
+    List<SysRoleQueryUserOperableVO> queryUserOperableList();
 
     ResponseData<PageDataVO<SysRoleQueryVO>> pageQuery(SysRoleQueryRequest request);
 

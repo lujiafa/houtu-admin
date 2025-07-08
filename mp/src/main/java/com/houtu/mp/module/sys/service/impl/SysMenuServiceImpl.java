@@ -55,6 +55,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
     public List<SysMenuQueryBaseVO> queryUserObtainedList() {
         SimpleUser sessionUser = SessionContext.getSessionUser();
         List<SysMenuEntity> sysMenuList;
+        // 超级管理员拥有所有菜单列表
         if (sessionUser.isAdmin()) {
             sysMenuList = baseMapper.selectList(new QueryWrapper<SysMenuEntity>()
                     .eq("deleted", 0)

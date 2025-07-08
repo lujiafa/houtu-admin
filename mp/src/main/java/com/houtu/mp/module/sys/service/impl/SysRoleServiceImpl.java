@@ -3,22 +3,21 @@ package com.houtu.mp.module.sys.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.houtu.mp.config.security.SimpleUser;
-import com.houtu.mp.module.sys.dao.*;
-import com.houtu.mp.module.sys.entity.*;
-import com.houtu.mp.module.sys.service.SysRoleService;
-import com.houtu.mp.support.SessionContext;
 import com.houtu.core.exception.ErrorCode;
 import com.houtu.mp.config.security.SecuritySupport;
+import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.mp.module.sys.dao.*;
 import com.houtu.mp.module.sys.entity.*;
 import com.houtu.mp.module.sys.request.SysRoleAddRequest;
 import com.houtu.mp.module.sys.request.SysRoleQueryRequest;
 import com.houtu.mp.module.sys.request.SysRoleUpdateRequest;
-import com.houtu.web.model.vo.PageDataVO;
-import com.houtu.mp.module.sys.vo.SysRoleQueryBaseVO;
+import com.houtu.mp.module.sys.service.SysRoleService;
+import com.houtu.mp.module.sys.vo.SysRoleQueryUserOperableVO;
 import com.houtu.mp.module.sys.vo.SysRoleQueryVO;
+import com.houtu.mp.support.SessionContext;
+import com.houtu.mp.support.type.CommonStatus;
 import com.houtu.web.model.response.ResponseData;
+import com.houtu.web.model.vo.PageDataVO;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -30,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -52,16 +52,21 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRoleEntity> i
     private SysRoleMenuDao sysRoleMenuDao;
 
     @Override
-    public List<SysRoleQueryBaseVO> queryBaseList(SysRoleQueryRequest request) {
+    public List<SysRoleQueryUserOperableVO> queryUserOperableList() {
         List<SysRoleEntity> entityList = baseMapper.selectList(new QueryWrapper<SysRoleEntity>()
                 .eq("deleted", 0)
-                .likeRight(request != null && StringUtils.isNotBlank(request.getRoleName()), "role_name", request.getRoleName())
-                .eq(request != null && request.getStatus() != null, "status", request.getStatus())
+                .eq("status", CommonStatus.ENABLED.getStatus())
                 .orderByAsc("sort"));
-        return entityList.stream().map(entity -> {
-            SysRoleQueryBaseVO baseVO = new SysRoleQueryBaseVO();
+        if (SessionContext.isAdmin()) {
+            return entityList.stream().map(entity -> {
+                SysRoleQueryUserOperableVO baseVO = new SysRoleQueryUserOperableVO();
+                BeanUtils.copyProperties(entity, baseVO);
+                return baseVO;
+            }).toList();
+        }
+        return entityList.stream().filter(r ->  !SecuritySupport.hasAdmin(r.getRolePerms())).map(entity -> {
+            SysRoleQueryUserOperableVO baseVO = new SysRoleQueryUserOperableVO();
             BeanUtils.copyProperties(entity, baseVO);
-            baseVO.setAdmin(SecuritySupport.hasAdmin(entity.getRolePerms()));
             return baseVO;
         }).toList();
     }
@@ -98,16 +103,30 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRoleEntity> i
     @Transactional
     @Override
     public ResponseData save(SysRoleAddRequest request) {
+        SimpleUser sessionUser = SessionContext.getSessionUser();
+        if (!sessionUser.isAdmin()) {
+            if (SecuritySupport.hasAdmin(request.getRolePerms()))
+                return ResponseData.fail(ErrorCode.build(4, LocaleContextHolder.getLocale(), Stream.of("您暂无添加超级管理角色的权限").toArray()));
+        }
+        boolean roleHasAdmin = SecuritySupport.hasAdmin(request.getRolePerms());
         SysRoleEntity entity = new SysRoleEntity();
-        BeanUtils.copyProperties(request, entity);
+        entity.setRoleName(request.getRoleName());
+        entity.setRolePerms(request.getRolePerms());
+        entity.setSort(request.getSort());
+        entity.setRemark(request.getRemark());
+        entity.setStatus(request.getStatus());
+        entity.setRolePerms(request.getRolePerms());
         entity.setCreateBy(SessionContext.getSessionUserId());
         entity.setCreateTime(LocalDateTime.now());
+
         int num = baseMapper.insert(entity);
         if (num <= 0) {
             return ResponseData.fail(ErrorCode.build(4, LocaleContextHolder.getLocale()));
         }
-        if (!SecuritySupport.hasAdmin(request.getRolePerms())
-                && request.getMenuIds() != null
+        if (roleHasAdmin)
+            return ResponseData.success();
+
+        if (request.getMenuIds() != null
                 && request.getMenuIds().size() > 0) {
             Long roleId = entity.getRoleId();
             List<SysRoleMenuEntity> roleMenuEntities = request.getMenuIds().stream().map(m -> {
@@ -124,36 +143,53 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRoleEntity> i
     @Transactional
     @Override
     public ResponseData update(SysRoleUpdateRequest request) {
+        boolean roleHasAdmin = SecuritySupport.hasAdmin(request.getRolePerms());
+        SimpleUser sessionUser = SessionContext.getSessionUser();
+        if (!sessionUser.isAdmin()) {
+            SysRoleEntity sysRoleEntity = baseMapper.selectById(request.getRoleId());
+            if (SecuritySupport.hasAdmin(sysRoleEntity.getRolePerms()))
+                return ResponseData.fail(ErrorCode.build(4, LocaleContextHolder.getLocale(), Stream.of("您暂无修改超级管理角色的权限").toArray()));
+            if (roleHasAdmin)
+                return ResponseData.fail(ErrorCode.build(4, LocaleContextHolder.getLocale(), Stream.of("您暂无将普通角色修改为超级管理角色的权限").toArray()));
+        }
+
         SysRoleEntity entity = new SysRoleEntity();
-        BeanUtils.copyProperties(request, entity);
+        entity.setRoleId(request.getRoleId());
+        entity.setRoleName(request.getRoleName());
+        entity.setRolePerms(request.getRolePerms());
+        entity.setSort(request.getSort());
+        entity.setStatus(request.getStatus());
+        entity.setRemark(request.getRemark());
         entity.setUpdateBy(SessionContext.getSessionUser().getUserId());
         entity.setUpdateTime(LocalDateTime.now());
         int num = baseMapper.updateById(entity);
         if (num <= 0) {
-            return ResponseData.fail(ErrorCode.build(4, LocaleContextHolder.getLocale()));
+            return ResponseData.fail(ErrorCode.build(4));
         }
-        if (SecuritySupport.hasAdmin(request.getRolePerms())) {
+        if (roleHasAdmin) {
+            // 超管角色无需角色-菜单关联数据
             sysRoleMenuDao.delete(new QueryWrapper<SysRoleMenuEntity>()
                     .eq("role_id", request.getRoleId()));
-        } else {
-            List<Long> existsMenuIds = sysRoleMenuDao.selectList(new QueryWrapper<SysRoleMenuEntity>().eq("role_id", request.getRoleId())).stream().map(p -> p.getMenuId()).toList();
-            List<Long> reqMenuIds = request.getMenuIds() == null ? List.of() : request.getMenuIds();
-            List<Long> delMenuIds = existsMenuIds.stream().filter(p -> !reqMenuIds.contains(p)).toList();
-            List<Long> addMenuIds = reqMenuIds.stream().filter(p -> !existsMenuIds.contains(p)).toList();
-            if (delMenuIds.size() > 0) {
-                sysRoleMenuDao.delete(new QueryWrapper<SysRoleMenuEntity>()
-                        .eq("role_id", request.getRoleId())
-                        .in("menu_id", delMenuIds));
-            }
-            if (addMenuIds.size() > 0) {
-                List<SysRoleMenuEntity> roleMenuEntities = addMenuIds.stream().map(m -> {
-                    SysRoleMenuEntity roleMenuEntity = new SysRoleMenuEntity();
-                    roleMenuEntity.setMenuId(m);
-                    roleMenuEntity.setRoleId(request.getRoleId());
-                    return roleMenuEntity;
-                }).toList();
-                sysRoleMenuDao.insert(roleMenuEntities);
-            }
+            return ResponseData.success();
+        }
+
+        List<Long> existsMenuIds = sysRoleMenuDao.selectList(new QueryWrapper<SysRoleMenuEntity>().eq("role_id", request.getRoleId())).stream().map(p -> p.getMenuId()).toList();
+        List<Long> reqMenuIds = request.getMenuIds() == null ? List.of() : request.getMenuIds();
+        List<Long> delMenuIds = existsMenuIds.stream().filter(p -> !reqMenuIds.contains(p)).toList();
+        List<Long> addMenuIds = reqMenuIds.stream().filter(p -> !existsMenuIds.contains(p)).toList();
+        if (delMenuIds.size() > 0) {
+            sysRoleMenuDao.delete(new QueryWrapper<SysRoleMenuEntity>()
+                    .eq("role_id", request.getRoleId())
+                    .in("menu_id", delMenuIds));
+        }
+        if (addMenuIds.size() > 0) {
+            List<SysRoleMenuEntity> roleMenuEntities = addMenuIds.stream().map(m -> {
+                SysRoleMenuEntity roleMenuEntity = new SysRoleMenuEntity();
+                roleMenuEntity.setMenuId(m);
+                roleMenuEntity.setRoleId(request.getRoleId());
+                return roleMenuEntity;
+            }).toList();
+            sysRoleMenuDao.insert(roleMenuEntities);
         }
         return ResponseData.success();
     }

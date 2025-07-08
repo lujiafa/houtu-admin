@@ -1,9 +1,6 @@
 package com.houtu.mp.module.sys.controller;
 
 import com.houtu.mp.aspect.OperateLog;
-import com.houtu.mp.config.security.SimpleUser;
-import com.houtu.mp.module.base.vo.UserInfoVO;
-import com.houtu.mp.module.sys.entity.SysUserEntity;
 import com.houtu.mp.module.sys.request.*;
 import com.houtu.mp.module.sys.service.SysOrgService;
 import com.houtu.mp.module.sys.service.SysPostService;
@@ -13,7 +10,6 @@ import com.houtu.mp.module.sys.vo.*;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.support.type.ModuleType;
 import com.houtu.mp.support.type.OperateType;
-import com.houtu.util.common.BeanUtils;
 import com.houtu.web.model.response.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
 import jakarta.annotation.Resource;
@@ -45,7 +41,7 @@ public class SysUserController {
 
     @PreAuthorize("hasAuthority('system:user:list') || hasAuthority('system:user:query')")
     @GetMapping("/orgList")
-    public ResponseData<List<SysOrgQueryBaseVO>> query(SysOrgQueryRequest orgQueryRequest) {
+    public ResponseData<List<SysOrgQueryBaseVO>> orgList(SysOrgQueryRequest orgQueryRequest) {
         return ResponseData.success(orgService.queryBaseList(orgQueryRequest));
     }
 
@@ -66,13 +62,8 @@ public class SysUserController {
      */
     @PreAuthorize("hasAuthority('system:user:authorize')")
     @GetMapping("/roleList")
-    public ResponseData<List<SysRoleQueryBaseVO>> roleList() {
-        SysRoleQueryRequest request = new SysRoleQueryRequest();
-        List<SysRoleQueryBaseVO> roleQueryList = roleService.queryBaseList(request);
-        // 非超级管理员用户时，返回列表中过滤掉超级管理员角色
-        if (!SessionContext.isAdmin()) {
-            roleQueryList = roleQueryList.stream().filter(role -> !role.isAdmin()).toList();
-        }
+    public ResponseData<List<SysRoleQueryUserOperableVO>> roleList() {
+        List<SysRoleQueryUserOperableVO> roleQueryList = roleService.queryUserOperableList();
         return ResponseData.success(roleQueryList);
     }
 

@@ -47,27 +47,13 @@ public class SysRoleController {
     @PreAuthorize("hasAuthority('system:role:add')")
     @PostMapping("/add")
     public ResponseData add(HttpServletRequest httpServletRequest, @Validated SysRoleAddRequest request) {
-        boolean paramHasAdmin = SecuritySupport.hasAdmin(request.getRolePerms());
-        if (!SessionContext.isAdmin() && paramHasAdmin) {
-            return ResponseData.fail(ErrorCode.build(4, httpServletRequest.getLocale(), Stream.of("role perms with reserved").toArray()));
-        }
-        if (paramHasAdmin && request.getMenuIds() != null && request.getMenuIds().size() > 1) {
-            return ResponseData.fail(ErrorCode.build(4, httpServletRequest.getLocale(), Stream.of("role admin permission do not use menuIds").toArray()));
-        }
         return roleService.save(request);
     }
 
     @OperateLog(moduleType = ModuleType.ROLE, operateType = OperateType.UPDATE)
     @PreAuthorize("hasAuthority('system:role:update')")
     @PutMapping("/update")
-    public ResponseData update(HttpServletRequest httpServletRequest, @Validated SysRoleUpdateRequest request) {
-        boolean paramHasAdmin = SecuritySupport.hasAdmin(request.getRolePerms());
-        if (!SessionContext.isAdmin() && paramHasAdmin) {
-            return ResponseData.fail(ErrorCode.build(4, httpServletRequest.getLocale(), Stream.of("role perms with reserved").toArray()));
-        }
-        if (paramHasAdmin && request.getMenuIds() != null && request.getMenuIds().size() > 1) {
-            return ResponseData.fail(ErrorCode.build(4, httpServletRequest.getLocale(), Stream.of("role admin permission do not use menuIds").toArray()));
-        }
+    public ResponseData update(@Validated SysRoleUpdateRequest request) {
         return roleService.update(request);
     }
     @OperateLog(moduleType = ModuleType.ROLE, operateType = OperateType.DELETE)

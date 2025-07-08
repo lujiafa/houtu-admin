@@ -1,13 +1,22 @@
 package com.houtu.mp.module.sys.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.houtu.web.model.BaseVO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class SysRoleQueryVO extends SysRoleQueryBaseVO {
+public class SysRoleQueryVO extends BaseVO {
+
+    private Long roleId;
+
+    private String roleName;
+
+    private String rolePerms;
+
+    private boolean admin;
 
     private Integer sort;
 
