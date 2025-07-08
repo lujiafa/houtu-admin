@@ -16,6 +16,7 @@ import com.houtu.mp.module.sys.service.SysUserService;
 import com.houtu.mp.module.sys.vo.SysUserQueryVO;
 import com.houtu.mp.module.sys.vo.SysUserSecretVO;
 import com.houtu.mp.support.SessionContext;
+import com.houtu.mp.support.type.CommonStatus;
 import com.houtu.mp.util.OTPUtils;
 import com.houtu.util.crypto.Base64Utils;
 import com.houtu.util.crypto.HMacMD5Utils;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -279,18 +281,24 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
     @Override
     public ResponseData authorize(SysUserAuthorizeRequest request) {
         List<Long> reqRoleIds = request.getRoleIds() == null ? List.of() : request.getRoleIds();
+        // 普通管理员授权限制逻辑
+        if (!SessionContext.isAdmin()) {
+            // 普通用户不能授权超管角色给其他用户
+            if (reqRoleIds.size() > 0) {
+                if (sysRoleDao.selectList(new QueryWrapper<SysRoleEntity>().in("role_id", reqRoleIds)).parallelStream().anyMatch(p -> SecuritySupport.hasAdmin(p.getRolePerms())))
+                    return ResponseData.fail(ErrorCode.build(4, Stream.of("普通管理员不能授权含超管权限的角色给其他用户").toArray()));
+            }
+            // 普通用户不能为含有超管权限的用户授权
+            List<SysRoleEntity> userRoleList = sysRoleDao.queryUserRoleList(request.getUserId(), null);
+            boolean userHasAdmin = userRoleList.parallelStream().anyMatch(r -> SecuritySupport.hasAdmin(r.getRolePerms()));
+            if (userHasAdmin)
+                return ResponseData.fail(ErrorCode.build(4, Stream.of("普通管理员不能为含有超管权限用户授权").toArray()));
+        }
+
         List<Long> existsRoleIds = sysUserRoleDao.selectList(new QueryWrapper<SysUserRoleEntity>().eq("user_id", request.getUserId())).stream().map(p -> p.getRoleId()).toList();
         List<Long> addRoleIds = reqRoleIds.stream().filter(o -> !existsRoleIds.contains(o)).toList();
         List<Long> delRoleIds = existsRoleIds.stream().filter(o -> !reqRoleIds.contains(o)).toList();
-        // 普通用户不能授权或取消授权超级管理员帐号权限
-        if (!SessionContext.isAdmin() && (!addRoleIds.isEmpty() || !delRoleIds.isEmpty())) {
-            ArrayList<Long> allRoleIds = new ArrayList<>(addRoleIds.size() + delRoleIds.size());
-            allRoleIds.addAll(addRoleIds);
-            allRoleIds.addAll(delRoleIds);
-            if (sysRoleDao.selectList(new QueryWrapper<SysRoleEntity>().in("role_id", allRoleIds)).stream().anyMatch(p -> SecuritySupport.hasAdmin(p.getRolePerms()))) {
-                return ResponseData.fail(ErrorCode.build(4, LocaleContextHolder.getLocale(), "You are not authorized to operate on the super-administrator role or user"));
-            }
-        }
+
         if (addRoleIds.size() > 0) {
             sysUserRoleDao.insert(addRoleIds.stream().map(o -> {
                 SysUserRoleEntity userRoleEntity = new SysUserRoleEntity();

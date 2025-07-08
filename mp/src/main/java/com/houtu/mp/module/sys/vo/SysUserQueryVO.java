@@ -23,8 +23,6 @@ public class SysUserQueryVO implements Serializable {
 
     private String avatar;
 
-    private String password;
-
     private String lastLoginIp;
 
     private LocalDateTime lastLoginTime;

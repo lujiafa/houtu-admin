@@ -6,6 +6,8 @@ export default {
   data() {
     return {
       store: useStore(),
+      // 当前用户是否为超管用户
+      myselfIsAdmin: false,
       loading: false,
       tableData: {
         "currentPage": 1,
@@ -77,7 +79,7 @@ export default {
       };
       this.formTitle = this.$i18n.t("common.add");
       this.formVisible = true;
-      this.rolePermsChange(undefined, []);
+      this.reloadFormTreeData();
     },
     handleEdit(row) {
       if ((!row || row instanceof Event) && this.selectRows.length === 1) {
@@ -95,7 +97,16 @@ export default {
       };
       this.formTitle = this.$i18n.t("common.edit");
       this.formVisible = true;
-      this.rolePermsChange(row.rolePerms, [...row.menuIds]);
+      this.formHasAdmin = /^admin$/i.test(row.rolePerms);
+      let menuIds = row.menuIds;
+      // 加载tree数据并渲染
+      this.reloadFormTreeData(() => {
+        if (!this.formHasAdmin && menuIds && menuIds.length > 0) {
+          this.$nextTick(() => {
+            this.$refs.formTreeRef.setCheckedKeys(menuIds || [], false)
+          });
+        }
+      });
     },
     handleDelete(row) {
       let delIds = [];
@@ -125,7 +136,8 @@ export default {
             message: this.$i18n.t('common.deleteSuccessDesc')
           });
           this.query();
-        }).catch(()=>{});
+        }).catch(() => {
+        });
       });
     },
     // 查询/搜索
@@ -137,7 +149,7 @@ export default {
       }).then(res => {
         this.tableData = res.data;
         this.loading = false;
-      }).catch(()=>{
+      }).catch(() => {
         this.loading = false;
       });
     },
@@ -156,6 +168,17 @@ export default {
     handleSelectRowsEvent(rows) {
       this.selectRows = rows;
     },
+    // 重新加载Form菜单树数据
+    reloadFormTreeData(callback) {
+      this.$session.get("/api/sys/role/menuList")
+          .then(res => {
+            let menuTreeData = res.data || [];
+            this.toolParseFormMenuTreeData(menuTreeData, []);
+            this.formTreeData = menuTreeData;
+            if (callback) callback();
+          }).catch(() => {
+      });
+    },
     // 角色权限值改变时触发事件
     rolePermsChange(rolePerms, menuIds) {
       // 判断角色权限标识是否指定为超级管理员(admin)
@@ -163,17 +186,13 @@ export default {
       // 超级管理员无标注需菜单权限即拥有全部权限，仅对非超级管理员角色时才进行菜单权限设置
       if (!this.formHasAdmin) {
         if (this.formTreeData.length === 0) {
-          this.$session.get("/api/sys/role/menuList")
-              .then(res => {
-                let menuTreeData = res.data || [];
-                this.toolParseFormMenuTreeData(menuTreeData, []);
-                this.formTreeData = menuTreeData;
-                if (!this.formHasAdmin && menuIds && menuIds.length > 0) {
-                  this.$nextTick(() => {
-                    this.$refs.formTreeRef.setCheckedKeys(menuIds || [], false)
-                  });
-                }
-              }).catch(()=>{});
+          this.reloadFormTreeData(() => {
+            if (!this.formHasAdmin && menuIds && menuIds.length > 0) {
+              this.$nextTick(() => {
+                this.$refs.formTreeRef.setCheckedKeys(menuIds || [], false)
+              });
+            }
+          });
         } else {
           this.$nextTick(() => {
             this.$refs.formTreeRef.setCheckedKeys(menuIds || [], false)
@@ -236,7 +255,8 @@ export default {
               message: this.$i18n.t('common.addSuccessDesc')
             });
             this.query();
-          }).catch(()=>{});
+          }).catch(() => {
+          });
         } else {
           ownerThis.$session.put("/api/sys/role/update", {
             roleId: formParams.roleId,
@@ -252,13 +272,22 @@ export default {
               message: this.$i18n.t('common.updateSuccessDesc')
             });
             this.query();
-          }).catch(()=>{});
+          }).catch(() => {
+          });
         }
         ownerThis.formVisible = false;
       });
+    },
+    // 初始化加载当前用户是否是超级管理员
+    initLoadMyselfHasAdmin() {
+      this.$session.get('/api/sys/user/adm').then(res => {
+        this.myselfIsAdmin = res.data;
+      }).catch(() => {
+      })
     }
   },
   created() {
+    this.initLoadMyselfHasAdmin();
     this.query();
   }
 }
@@ -291,8 +320,13 @@ export default {
     </div>
     <div class="v-lu-toolbar-container">
       <el-button v-if="permsAdd" icon="Plus" @click="handleAdd">{{ $t('common.add') }}</el-button>
-      <el-button v-if="permsUpdate" icon="Edit" @click="handleEdit" :disabled="topEditDisabled">{{ $t('common.edit') }}</el-button>
-      <el-button v-if="permsDelete" icon="Delete" @click="handleDelete" :disabled="topDeleteDisabled">{{ $t('common.delete') }}</el-button>
+      <el-button v-if="permsUpdate" icon="Edit" @click="handleEdit" :disabled="topEditDisabled">{{
+          $t('common.edit')
+        }}
+      </el-button>
+      <el-button v-if="permsDelete" icon="Delete" @click="handleDelete" :disabled="topDeleteDisabled">
+        {{ $t('common.delete') }}
+      </el-button>
     </div>
     <el-table
         :data="tableData.records"
@@ -316,8 +350,12 @@ export default {
       <el-table-column prop="createTime" :label="$t('common.createTime')"/>
       <el-table-column :label="$t('common.operation')">
         <template #default="{ row }">
-          <el-button v-if="permsUpdate" type='primary' link @click="handleEdit(row)">{{ $t('common.edit') }}</el-button>
-          <el-button v-if="permsDelete" type='primary' link @click="handleDelete(row)">{{ $t('common.delete') }}</el-button>
+          <span v-if="!this.myselfIsAdmin && row.admin">-</span>
+          <el-button v-if="this.myselfIsAdmin || (permsUpdate && !row.admin)" type='primary' link @click="handleEdit(row)">{{ $t('common.edit') }}</el-button>
+          <el-button v-if="this.myselfIsAdmin || (permsDelete && !row.admin)" type='primary' link @click="handleDelete(row)">{{
+              $t('common.delete')
+            }}
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -425,6 +463,7 @@ export default {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
 }
+
 .v-lu-form-tree::-webkit-scrollbar {
   width: 0; /* 隐藏滚动条 */
   height: 0;
