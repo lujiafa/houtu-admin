@@ -6,7 +6,6 @@ import com.houtu.mp.module.sys.request.SysDictDataAddRequest;
 import com.houtu.mp.module.sys.request.SysDictDataQueryRequest;
 import com.houtu.mp.module.sys.request.SysDictDataUpdateRequest;
 import com.houtu.mp.module.sys.vo.SysDictDataQueryVO;
-import com.houtu.mp.module.sys.vo.SysDictSimpleVO;
 import com.houtu.web.model.response.ResponseData;
 
 import java.util.List;
@@ -22,8 +21,6 @@ import java.util.List;
 public interface SysDictDataService extends IService<SysDictDataEntity> {
 
     ResponseData<List<SysDictDataQueryVO>> query(SysDictDataQueryRequest request);
-
-    ResponseData<SysDictSimpleVO> findByTypeCode(String typeCode);
 
     ResponseData save(SysDictDataAddRequest request);
 

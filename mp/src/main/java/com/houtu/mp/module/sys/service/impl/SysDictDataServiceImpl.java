@@ -2,19 +2,16 @@ package com.houtu.mp.module.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.houtu.core.exception.ErrorCode;
 import com.houtu.mp.module.sys.dao.SysDictDao;
 import com.houtu.mp.module.sys.dao.SysDictDataDao;
 import com.houtu.mp.module.sys.entity.SysDictDataEntity;
-import com.houtu.mp.module.sys.entity.SysDictEntity;
 import com.houtu.mp.module.sys.request.SysDictDataAddRequest;
 import com.houtu.mp.module.sys.request.SysDictDataQueryRequest;
 import com.houtu.mp.module.sys.request.SysDictDataUpdateRequest;
 import com.houtu.mp.module.sys.service.SysDictDataService;
 import com.houtu.mp.module.sys.vo.SysDictDataQueryVO;
-import com.houtu.mp.module.sys.vo.SysDictDataSimpleVO;
-import com.houtu.mp.module.sys.vo.SysDictSimpleVO;
 import com.houtu.mp.support.SessionContext;
-import com.houtu.core.exception.ErrorCode;
 import com.houtu.web.model.response.ResponseData;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -38,8 +34,6 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataDao, SysDictDataEntity> implements SysDictDataService {
-
-    final static String DICT_DATA_CACHE_KEY_PATTERN = "dict_data:typeCode:%s";
 
     @Resource
     private SysDictDao sysDictDao;
@@ -62,50 +56,6 @@ public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataDao, SysDictD
             }).toList());
         }
         return ResponseData.success(Collections.emptyList());
-    }
-
-    @Override
-    public ResponseData<SysDictSimpleVO> findByTypeCode(String typeCode) {
-        String cacheKey = String.format(DICT_DATA_CACHE_KEY_PATTERN, typeCode);
-        Object object = redisTemplate.opsForValue().get(cacheKey);
-        if (object != null) {
-            if (object instanceof SysDictSimpleVO) {
-                return ResponseData.success((SysDictSimpleVO) object);
-            }
-            SysDictSimpleVO vo = new SysDictSimpleVO();
-            vo.setTypeCode(typeCode);
-            vo.setTypeName("UNKNOWN");
-            vo.setTypeDesc("UNKNOWN");
-            vo.setList(Collections.emptyList());
-            return ResponseData.success(vo);
-        }
-        SysDictSimpleVO vo = new SysDictSimpleVO();
-        SysDictEntity sysDictEntity = sysDictDao.selectOne(new QueryWrapper<SysDictEntity>()
-                .eq("type_code", typeCode)
-                .eq("deleted", 0)
-                .last("limit 1"));
-        if (sysDictEntity == null) {
-            redisTemplate.opsForValue().set(cacheKey, "", 15, TimeUnit.SECONDS);
-            vo.setTypeCode(typeCode);
-            vo.setTypeName("UNKNOWN");
-            vo.setTypeDesc("UNKNOWN");
-            vo.setList(Collections.emptyList());
-            return ResponseData.success(vo);
-        }
-        vo.setTypeCode(sysDictEntity.getTypeCode());
-        vo.setTypeName(sysDictEntity.getTypeName());
-        vo.setTypeDesc(sysDictEntity.getTypeDesc());
-        List<SysDictDataSimpleVO> dictDataList = baseMapper.selectList(new QueryWrapper<SysDictDataEntity>()
-                .eq("dict_id", sysDictEntity.getDictId())
-                .eq("deleted", 0))
-                .stream().map(p -> {
-                    SysDictDataSimpleVO dictDataVO = new SysDictDataSimpleVO();
-                    BeanUtils.copyProperties(p, dictDataVO);
-                    return dictDataVO;
-                }).toList();
-        vo.setList(dictDataList);
-        redisTemplate.opsForValue().set(cacheKey, vo, 30, TimeUnit.SECONDS);
-        return ResponseData.success(vo);
     }
 
     @Override
