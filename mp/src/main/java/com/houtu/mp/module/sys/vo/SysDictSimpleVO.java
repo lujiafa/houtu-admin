@@ -3,6 +3,7 @@ package com.houtu.mp.module.sys.vo;
 import com.houtu.web.model.BaseVO;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -20,5 +21,5 @@ public class SysDictSimpleVO extends BaseVO {
 
     private String typeDesc;
 
-   private List<SysDictDataSimpleVO> list;
+   private List<SysDictDataSimpleVO> list = new ArrayList<>();
 }

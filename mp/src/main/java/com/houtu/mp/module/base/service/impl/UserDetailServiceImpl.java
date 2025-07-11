@@ -85,6 +85,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
         if (num <= 1)
             stringRedisTemplate.expire(limitCacheKey, 180, java.util.concurrent.TimeUnit.SECONDS);
         if (num > 5)
-            throw new BusinessException(ErrorCode.build(14, Stream.of("您的操作太频繁，请3分钟后再试").toArray()));
+            throw new UsernameNotFoundException(StringUtils.EMPTY, new BusinessException(ErrorCode.build(14, Stream.of("您的操作太频繁，请3分钟后再试").toArray())));
     }
 }

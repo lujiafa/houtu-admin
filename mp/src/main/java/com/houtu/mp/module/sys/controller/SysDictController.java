@@ -4,6 +4,7 @@ import com.houtu.mp.aspect.OperateLog;
 import com.houtu.mp.module.sys.request.*;
 import com.houtu.mp.module.sys.service.SysDictService;
 import com.houtu.mp.module.sys.service.SysDictService;
+import com.houtu.mp.module.sys.vo.DictTypeVO;
 import com.houtu.mp.module.sys.vo.SysDictQueryVO;
 import com.houtu.mp.support.type.ModuleType;
 import com.houtu.mp.support.type.OperateType;
@@ -20,6 +21,11 @@ public class SysDictController {
 
     @Resource
     private SysDictService dictService;
+
+    @GetMapping("/find")
+    public ResponseData<DictTypeVO> findByTypeCode(@RequestParam(required = false) String typeCode) {
+        return dictService.findByTypeCode(typeCode);
+    }
 
     @PreAuthorize("hasAuthority('system:dict:query')")
     @GetMapping("/query")

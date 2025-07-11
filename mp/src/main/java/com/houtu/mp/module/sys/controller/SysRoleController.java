@@ -1,26 +1,25 @@
 package com.houtu.mp.module.sys.controller;
 
-import com.houtu.core.exception.ErrorCode;
 import com.houtu.mp.aspect.OperateLog;
 import com.houtu.mp.config.security.SecuritySupport;
-import com.houtu.mp.module.sys.request.*;
+import com.houtu.mp.module.sys.request.SysRoleAddRequest;
+import com.houtu.mp.module.sys.request.SysRoleDeleteRequest;
+import com.houtu.mp.module.sys.request.SysRoleQueryRequest;
+import com.houtu.mp.module.sys.request.SysRoleUpdateRequest;
 import com.houtu.mp.module.sys.service.SysMenuService;
 import com.houtu.mp.module.sys.service.SysRoleService;
 import com.houtu.mp.module.sys.vo.SysMenuQueryBaseVO;
 import com.houtu.mp.module.sys.vo.SysRoleQueryVO;
-import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.support.type.ModuleType;
 import com.houtu.mp.support.type.OperateType;
 import com.houtu.web.model.response.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/sys/role")
@@ -38,6 +37,12 @@ public class SysRoleController {
     }
 
     @PreAuthorize("hasAuthority('system:role:add') || hasAuthority('system:role:update')")
+    @GetMapping("/hasAdm")
+    public ResponseData<Boolean> hasAdm(@RequestParam(required = false) String perms) {
+        return ResponseData.success(SecuritySupport.hasAdmin(perms));
+    }
+
+    @PreAuthorize("hasAuthority('system:role:add') || hasAuthority('system:role:update')")
     @GetMapping("/menuList")
     public ResponseData<List<SysMenuQueryBaseVO>> menuList() {
         return ResponseData.success(menuService.queryUserObtainedList());
@@ -46,7 +51,7 @@ public class SysRoleController {
     @OperateLog(moduleType = ModuleType.ROLE, operateType = OperateType.ADD)
     @PreAuthorize("hasAuthority('system:role:add')")
     @PostMapping("/add")
-    public ResponseData add(HttpServletRequest httpServletRequest, @Validated SysRoleAddRequest request) {
+    public ResponseData add(@Validated SysRoleAddRequest request) {
         return roleService.save(request);
     }
 
