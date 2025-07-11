@@ -1,11 +1,13 @@
 package com.houtu.mp.module.sys.controller;
 
 import com.houtu.mp.aspect.OperateLog;
-import com.houtu.mp.module.sys.request.*;
+import com.houtu.mp.module.sys.request.SysDictAddRequest;
+import com.houtu.mp.module.sys.request.SysDictDeleteRequest;
+import com.houtu.mp.module.sys.request.SysDictQueryRequest;
+import com.houtu.mp.module.sys.request.SysDictUpdateRequest;
 import com.houtu.mp.module.sys.service.SysDictService;
-import com.houtu.mp.module.sys.service.SysDictService;
-import com.houtu.mp.module.sys.vo.DictTypeVO;
 import com.houtu.mp.module.sys.vo.SysDictQueryVO;
+import com.houtu.mp.module.sys.vo.SysDictSimpleVO;
 import com.houtu.mp.support.type.ModuleType;
 import com.houtu.mp.support.type.OperateType;
 import com.houtu.web.model.response.ResponseData;
@@ -23,7 +25,7 @@ public class SysDictController {
     private SysDictService dictService;
 
     @GetMapping("/find")
-    public ResponseData<DictTypeVO> findByTypeCode(@RequestParam(required = false) String typeCode) {
+    public ResponseData<SysDictSimpleVO> findByTypeCode(@RequestParam(required = false) String typeCode) {
         return dictService.findByTypeCode(typeCode);
     }
 
