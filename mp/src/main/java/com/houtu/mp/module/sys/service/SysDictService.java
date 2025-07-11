@@ -1,11 +1,10 @@
 package com.houtu.mp.module.sys.service;
 
-import com.houtu.mp.module.sys.entity.SysDictEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.houtu.mp.module.sys.entity.SysDictEntity;
 import com.houtu.mp.module.sys.request.SysDictAddRequest;
 import com.houtu.mp.module.sys.request.SysDictQueryRequest;
 import com.houtu.mp.module.sys.request.SysDictUpdateRequest;
-import com.houtu.mp.module.sys.vo.DictTypeVO;
 import com.houtu.mp.module.sys.vo.SysDictQueryVO;
 import com.houtu.mp.module.sys.vo.SysDictSimpleVO;
 import com.houtu.web.model.response.ResponseData;
