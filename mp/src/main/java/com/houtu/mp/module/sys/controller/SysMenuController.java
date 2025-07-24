@@ -9,7 +9,7 @@ import com.houtu.mp.module.sys.service.SysMenuService;
 import com.houtu.mp.module.sys.vo.SysMenuQueryVO;
 import com.houtu.mp.support.type.ModuleType;
 import com.houtu.mp.support.type.OperateType;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;

@@ -8,7 +8,7 @@ import com.houtu.mp.module.sys.request.SysRoleUpdateRequest;
 import com.houtu.web.model.vo.PageDataVO;
 import com.houtu.mp.module.sys.vo.SysRoleQueryUserOperableVO;
 import com.houtu.mp.module.sys.vo.SysRoleQueryVO;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 
 import java.util.List;
 

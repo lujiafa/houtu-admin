@@ -10,7 +10,7 @@ import com.houtu.mp.module.sys.vo.*;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.support.type.ModuleType;
 import com.houtu.mp.support.type.OperateType;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
 import jakarta.annotation.Resource;
 import jakarta.validation.constraints.NotNull;

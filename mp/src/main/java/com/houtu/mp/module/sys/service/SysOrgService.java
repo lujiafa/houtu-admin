@@ -8,7 +8,7 @@ import com.houtu.mp.module.sys.request.SysOrgQueryRequest;
 import com.houtu.mp.module.sys.request.SysOrgUpdateRequest;
 import com.houtu.mp.module.sys.vo.SysOrgQueryBaseVO;
 import com.houtu.mp.module.sys.vo.SysOrgQueryVO;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 
 import java.util.List;
 

@@ -17,7 +17,7 @@ import com.houtu.mp.module.sys.vo.SysDictQueryVO;
 import com.houtu.mp.module.sys.vo.SysDictSimpleVO;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.support.type.CommonStatus;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;

@@ -10,7 +10,7 @@ import com.houtu.mp.module.sys.request.*;
 import com.houtu.mp.module.sys.vo.SysUserSecretVO;
 import com.houtu.web.model.vo.PageDataVO;
 import com.houtu.mp.module.sys.vo.SysUserQueryVO;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 
 /**
  * <p>

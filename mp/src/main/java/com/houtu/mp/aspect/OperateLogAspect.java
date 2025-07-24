@@ -6,7 +6,7 @@ import com.houtu.mp.module.sys.service.SysOperateLogService;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.util.common.JsonUtils;
 import com.houtu.util.web.WebUtils;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 import com.houtu.web.util.WebCombineParametersSupport;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;

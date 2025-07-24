@@ -30,8 +30,8 @@ import static com.google.code.kaptcha.Constants.*;
 /**
  * 生成验证码配置
  *
- * @author Mark sunlightcs@gmail.com
- * @since 2.1.0 2017-04-20
+ * @author jonlu
+ * @date 2018/1/6
  */
 @Configuration
 public class KaptchaConfig {

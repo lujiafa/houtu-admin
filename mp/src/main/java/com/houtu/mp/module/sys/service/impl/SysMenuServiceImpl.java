@@ -19,7 +19,7 @@ import com.houtu.mp.support.type.CommonStatus;
 import com.houtu.mp.support.type.MenuIconType;
 import com.houtu.mp.support.type.MenuPathType;
 import com.houtu.mp.support.type.MenuType;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 import jakarta.annotation.Resource;
 import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;

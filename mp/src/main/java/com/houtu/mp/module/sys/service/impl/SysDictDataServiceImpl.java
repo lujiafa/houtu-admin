@@ -12,7 +12,7 @@ import com.houtu.mp.module.sys.request.SysDictDataUpdateRequest;
 import com.houtu.mp.module.sys.service.SysDictDataService;
 import com.houtu.mp.module.sys.vo.SysDictDataQueryVO;
 import com.houtu.mp.support.SessionContext;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;

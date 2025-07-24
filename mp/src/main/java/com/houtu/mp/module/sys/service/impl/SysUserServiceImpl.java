@@ -22,7 +22,7 @@ import com.houtu.util.crypto.Base64Utils;
 import com.houtu.util.crypto.HMacMD5Utils;
 import com.houtu.util.crypto.HMacSHAUtils;
 import com.houtu.util.data.HexUtils;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.BooleanUtils;
