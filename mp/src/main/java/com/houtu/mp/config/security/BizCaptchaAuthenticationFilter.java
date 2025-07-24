@@ -2,7 +2,7 @@ package com.houtu.mp.config.security;
 
 import com.houtu.mp.util.ResponseUtils;
 import com.houtu.core.exception.ErrorCode;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

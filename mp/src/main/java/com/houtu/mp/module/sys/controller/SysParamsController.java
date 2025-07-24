@@ -6,7 +6,7 @@ import com.houtu.mp.module.sys.service.SysParamsService;
 import com.houtu.mp.module.sys.vo.SysParamsQueryVO;
 import com.houtu.mp.support.type.ModuleType;
 import com.houtu.mp.support.type.OperateType;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
 import jakarta.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;

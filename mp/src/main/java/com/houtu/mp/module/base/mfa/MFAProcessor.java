@@ -1,7 +1,7 @@
 package com.houtu.mp.module.base.mfa;
 
 import com.houtu.mp.module.sys.entity.SysUserEntity;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

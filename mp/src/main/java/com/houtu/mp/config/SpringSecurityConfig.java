@@ -9,7 +9,7 @@ import com.houtu.mp.config.security.BizCaptchaAuthenticationFilter;
 import com.houtu.mp.config.security.BizSecurityContextRepository;
 import com.houtu.mp.config.security.MFAAuthorizationManager;
 import com.houtu.mp.config.security.SimpleUser;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 import jakarta.servlet.DispatcherType;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;

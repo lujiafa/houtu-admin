@@ -20,7 +20,7 @@ import com.houtu.mp.module.sys.service.impl.SysUserServiceImpl;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.util.OTPUtils;
 import com.houtu.util.common.BeanUtils;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 import jakarta.annotation.Resource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;

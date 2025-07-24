@@ -5,7 +5,7 @@ import com.houtu.mp.module.base.request.MFAVerifyRequest;
 import com.houtu.mp.module.base.request.UserInfoUpdateRequest;
 import com.houtu.mp.module.base.request.UserUpdateMyselfPasswordRequest;
 import com.houtu.mp.module.base.vo.UserInfoVO;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 
 public interface UserService {
 

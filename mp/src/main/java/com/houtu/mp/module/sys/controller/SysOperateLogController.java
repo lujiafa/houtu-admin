@@ -3,7 +3,7 @@ package com.houtu.mp.module.sys.controller;
 import com.houtu.mp.module.sys.request.SysOperateQueryRequest;
 import com.houtu.mp.module.sys.service.SysOperateLogService;
 import com.houtu.mp.module.sys.vo.SysOperateLogQueryVO;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
 import jakarta.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;

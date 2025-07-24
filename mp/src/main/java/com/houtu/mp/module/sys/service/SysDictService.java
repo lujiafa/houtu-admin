@@ -7,7 +7,7 @@ import com.houtu.mp.module.sys.request.SysDictQueryRequest;
 import com.houtu.mp.module.sys.request.SysDictUpdateRequest;
 import com.houtu.mp.module.sys.vo.SysDictQueryVO;
 import com.houtu.mp.module.sys.vo.SysDictSimpleVO;
-import com.houtu.web.model.response.ResponseData;
+import com.houtu.core.web.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
 
 import java.util.List;
