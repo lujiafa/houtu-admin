@@ -2,8 +2,8 @@ package com.houtu.mp.module.base.controller;
 
 import com.houtu.mp.module.base.service.MenuService;
 import com.houtu.mp.module.base.vo.ShowMenuVO;
-import com.houtu.core.web.ResponseData;
-import jakarta.annotation.Resource;
+import com.houtu.web.model.ResponseData;
+import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

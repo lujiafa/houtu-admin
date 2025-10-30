@@ -33,6 +33,3 @@ mybatis-plus:
       id-type: auto
       table-underline: true
 
-houtu:
-  monitor:
-    fullRequest: true

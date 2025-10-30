@@ -12,7 +12,7 @@ import com.houtu.mp.module.sys.request.SysParamsUpdateRequest;
 import com.houtu.mp.module.sys.service.SysParamsService;
 import com.houtu.mp.module.sys.vo.SysParamsQueryVO;
 import com.houtu.mp.support.SessionContext;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -48,7 +49,7 @@ public class SysParamsServiceImpl extends ServiceImpl<SysParamsDao, SysParamsEnt
                 SysParamsQueryVO vo = new SysParamsQueryVO();
                 BeanUtils.copyProperties(p, vo);
                 return vo;
-            }).toList()));
+            }).collect(Collectors.toList())));
         }
         return ResponseData.success(PageDataVO.empty());
     }

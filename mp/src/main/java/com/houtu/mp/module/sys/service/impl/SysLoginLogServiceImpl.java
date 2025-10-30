@@ -11,11 +11,13 @@ import com.houtu.mp.module.sys.dao.SysUserDao;
 import com.houtu.mp.module.sys.entity.SysLoginLogEntity;
 import com.houtu.mp.module.sys.request.SysLoginQueryRequest;
 import com.houtu.mp.module.sys.vo.SysLoginLogQueryVO;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
-import jakarta.annotation.Resource;
+import javax.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -45,7 +47,7 @@ public class SysLoginLogServiceImpl extends ServiceImpl<SysLoginLogDao, SysLogin
                 SysLoginLogQueryVO vo = new SysLoginLogQueryVO();
                 BeanUtils.copyProperties(p, vo);
                 return vo;
-            }).toList()));
+            }).collect(Collectors.toList())));
         }
         return ResponseData.success(PageDataVO.empty());
     }

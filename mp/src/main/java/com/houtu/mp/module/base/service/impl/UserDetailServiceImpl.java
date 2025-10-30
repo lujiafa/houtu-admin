@@ -12,8 +12,8 @@ import com.houtu.mp.module.sys.entity.SysUserEntity;
 import com.houtu.mp.module.sys.service.SysUserService;
 import com.houtu.mp.support.type.CommonStatus;
 import com.houtu.util.web.WebUtils;
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
@@ -60,11 +60,11 @@ public class UserDetailServiceImpl implements UserDetailsService {
         boolean admin = false; // 是否是超级管理员
         List<SysRoleEntity> sysRoleEntityList = sysRoleDao.queryUserRoleList(sysUserEntity.getUserId(), CommonStatus.ENABLED.getStatus());
         if (sysRoleEntityList != null && !sysRoleEntityList.isEmpty()) {
-            List<String> rolePerms = sysRoleEntityList.parallelStream().filter(r -> StringUtils.isNotBlank(r.getRolePerms())).map(r -> r.getRolePerms()).toList();
+            List<String> rolePerms = sysRoleEntityList.parallelStream().filter(r -> StringUtils.isNotBlank(r.getRolePerms())).map(r -> r.getRolePerms()).collect(Collectors.toList());
             admin = rolePerms.parallelStream().anyMatch(p -> SecuritySupport.hasAdmin(p));
             if (!admin) {
-                authorities.addAll(rolePerms.parallelStream().map(p -> new SimpleGrantedAuthority(p)).toList());
-                List<SysMenuEntity> sysMenuEntities = sysMenuDao.queryMenuByRoleIds(sysRoleEntityList.parallelStream().map(SysRoleEntity::getRoleId).toList(), CommonStatus.ENABLED.getStatus(), null);
+                authorities.addAll(rolePerms.parallelStream().map(p -> new SimpleGrantedAuthority(p)).collect(Collectors.toList()));
+                List<SysMenuEntity> sysMenuEntities = sysMenuDao.queryMenuByRoleIds(sysRoleEntityList.parallelStream().map(SysRoleEntity::getRoleId).collect(Collectors.toList()), CommonStatus.ENABLED.getStatus(), null);
                 if (sysMenuEntities != null && !sysMenuEntities.isEmpty()) {
                     authorities.addAll(sysMenuEntities.parallelStream().filter(p -> StringUtils.isNotBlank(p.getPerms())).map(m -> new SimpleGrantedAuthority(m.getPerms())).collect(Collectors.toSet()));
                 }

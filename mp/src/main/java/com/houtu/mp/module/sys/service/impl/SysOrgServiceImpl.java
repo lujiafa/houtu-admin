@@ -2,29 +2,30 @@ package com.houtu.mp.module.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.houtu.mp.module.sys.request.SysOrgAuthorizeRequest;
-import com.houtu.mp.module.sys.service.SysOrgService;
-import com.houtu.mp.support.SessionContext;
 import com.houtu.core.exception.ErrorCode;
 import com.houtu.mp.module.sys.dao.SysOrgDao;
 import com.houtu.mp.module.sys.dao.SysOrgRoleDao;
 import com.houtu.mp.module.sys.entity.SysOrgEntity;
 import com.houtu.mp.module.sys.entity.SysOrgRoleEntity;
 import com.houtu.mp.module.sys.request.SysOrgAddRequest;
+import com.houtu.mp.module.sys.request.SysOrgAuthorizeRequest;
 import com.houtu.mp.module.sys.request.SysOrgQueryRequest;
 import com.houtu.mp.module.sys.request.SysOrgUpdateRequest;
+import com.houtu.mp.module.sys.service.SysOrgService;
 import com.houtu.mp.module.sys.vo.SysOrgQueryBaseVO;
 import com.houtu.mp.module.sys.vo.SysOrgQueryVO;
-import com.houtu.core.web.ResponseData;
-import jakarta.annotation.Resource;
+import com.houtu.mp.support.SessionContext;
+import com.houtu.web.model.ResponseData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -84,17 +85,17 @@ public class SysOrgServiceImpl extends ServiceImpl<SysOrgDao, SysOrgEntity> impl
     @Transactional
     @Override
     public ResponseData authorize(SysOrgAuthorizeRequest request) {
-        List<Long> reqRoleIds = request.getRoleIds() == null ? List.of() : request.getRoleIds();
-        List<Long> existsRoleIds = orgRoleDao.selectList(new QueryWrapper<SysOrgRoleEntity>().eq("org_id", request.getOrgId())).stream().map(p -> p.getRoleId()).toList();
-        List<Long> addRoleIds = reqRoleIds.stream().filter(o -> !existsRoleIds.contains(o)).toList();
-        List<Long> delRoleIds = existsRoleIds.stream().filter(o -> !reqRoleIds.contains(o)).toList();
+        List<Long> reqRoleIds = request.getRoleIds() == null ? Collections.emptyList() : request.getRoleIds();
+        List<Long> existsRoleIds = orgRoleDao.selectList(new QueryWrapper<SysOrgRoleEntity>().eq("org_id", request.getOrgId())).stream().map(p -> p.getRoleId()).collect(Collectors.toList());
+        List<Long> addRoleIds = reqRoleIds.stream().filter(o -> !existsRoleIds.contains(o)).collect(Collectors.toList());
+        List<Long> delRoleIds = existsRoleIds.stream().filter(o -> !reqRoleIds.contains(o)).collect(Collectors.toList());
         if (addRoleIds.size() > 0) {
             orgRoleDao.insert(addRoleIds.stream().map(o -> {
                 SysOrgRoleEntity orgRoleEntity = new SysOrgRoleEntity();
                 orgRoleEntity.setRoleId(o);
                 orgRoleEntity.setOrgId(request.getOrgId());
                 return orgRoleEntity;
-            }).toList());
+            }).collect(Collectors.toList()));
         }
         if (delRoleIds.size() > 0) {
             orgRoleDao.delete(new QueryWrapper<SysOrgRoleEntity>().eq("org_id", request.getOrgId()).in("role_id", delRoleIds));

@@ -17,8 +17,8 @@ import com.houtu.mp.module.sys.request.SysPostUpdateRequest;
 import com.houtu.web.model.vo.PageDataVO;
 import com.houtu.mp.module.sys.vo.SysPostQueryBaseVO;
 import com.houtu.mp.module.sys.vo.SysPostQueryVO;
-import com.houtu.core.web.ResponseData;
-import jakarta.annotation.Resource;
+import com.houtu.web.model.ResponseData;
+import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -26,7 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -55,7 +57,7 @@ public class SysPostServiceImpl extends ServiceImpl<SysPostDao, SysPostEntity> i
             SysPostQueryBaseVO vo = new SysPostQueryBaseVO();
             BeanUtils.copyProperties(p, vo);
             return vo;
-        }).toList();
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -72,7 +74,7 @@ public class SysPostServiceImpl extends ServiceImpl<SysPostDao, SysPostEntity> i
                 SysPostQueryVO vo = new SysPostQueryVO();
                 BeanUtils.copyProperties(p, vo);
                 return vo;
-            }).toList()));
+            }).collect(Collectors.toList())));
         }
         return ResponseData.success(PageDataVO.empty());
     }
@@ -108,17 +110,17 @@ public class SysPostServiceImpl extends ServiceImpl<SysPostDao, SysPostEntity> i
     @Transactional
     @Override
     public ResponseData authorize(SysPostAuthorizeRequest request) {
-        List<Long> reqRoleIds = request.getRoleIds() == null ? List.of() : request.getRoleIds();
-        List<Long> existsRoleIds = postRoleDao.selectList(new QueryWrapper<SysPostRoleEntity>().eq("post_id", request.getPostId())).stream().map(p -> p.getRoleId()).toList();
-        List<Long> addRoleIds = reqRoleIds.stream().filter(o -> !existsRoleIds.contains(o)).toList();
-        List<Long> delRoleIds = existsRoleIds.stream().filter(o -> !reqRoleIds.contains(o)).toList();
+        List<Long> reqRoleIds = request.getRoleIds() == null ? Collections.emptyList() : request.getRoleIds();
+        List<Long> existsRoleIds = postRoleDao.selectList(new QueryWrapper<SysPostRoleEntity>().eq("post_id", request.getPostId())).stream().map(p -> p.getRoleId()).collect(Collectors.toList());
+        List<Long> addRoleIds = reqRoleIds.stream().filter(o -> !existsRoleIds.contains(o)).collect(Collectors.toList());
+        List<Long> delRoleIds = existsRoleIds.stream().filter(o -> !reqRoleIds.contains(o)).collect(Collectors.toList());
         if (addRoleIds.size() > 0) {
             postRoleDao.insert(addRoleIds.stream().map(o -> {
                 SysPostRoleEntity postRoleEntity = new SysPostRoleEntity();
                 postRoleEntity.setRoleId(o);
                 postRoleEntity.setPostId(request.getPostId());
                 return postRoleEntity;
-            }).toList());
+            }).collect(Collectors.toList()));
         }
         if (delRoleIds.size() > 0) {
             postRoleDao.delete(new QueryWrapper<SysPostRoleEntity>().eq("post_id", request.getPostId()).in("role_id", delRoleIds));

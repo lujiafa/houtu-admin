@@ -17,9 +17,9 @@ import com.houtu.mp.module.sys.vo.SysDictQueryVO;
 import com.houtu.mp.module.sys.vo.SysDictSimpleVO;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.support.type.CommonStatus;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
-import jakarta.annotation.Resource;
+import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -65,7 +66,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictDao, SysDictEntity> i
                 SysDictQueryVO vo = new SysDictQueryVO();
                 BeanUtils.copyProperties(p, vo);
                 return vo;
-            }).toList()));
+            }).collect(Collectors.toList())));
         }
         return ResponseData.success(PageDataVO.empty());
     }
@@ -150,7 +151,7 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictDao, SysDictEntity> i
                 item.setDictDataValue(p.getDictDataValue());
                 item.setDictDataDesc(p.getDictDataDesc());
                 return item;
-            }).toList());
+            }).collect(Collectors.toList()));
         }
         redisTemplate.opsForValue().set(cacheKey, vo, 15, TimeUnit.SECONDS);
         return ResponseData.success(vo);
@@ -162,6 +163,6 @@ public class SysDictServiceImpl extends ServiceImpl<SysDictDao, SysDictEntity> i
         if (responseData.hasSuccess()) {
             return responseData.getData().getList().stream().collect(Collectors.toMap(SysDictDataSimpleVO::getDictDataValue, SysDictDataSimpleVO::getDictDataName));
         }
-        return Map.of();
+        return Collections.emptyMap();
     }
 }

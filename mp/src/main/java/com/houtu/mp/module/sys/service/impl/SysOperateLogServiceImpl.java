@@ -10,10 +10,12 @@ import com.houtu.mp.module.sys.dao.SysOperateLogDao;
 import com.houtu.mp.module.sys.entity.SysOperateLogEntity;
 import com.houtu.mp.module.sys.request.SysOperateQueryRequest;
 import com.houtu.mp.module.sys.vo.SysOperateLogQueryVO;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -40,7 +42,7 @@ public class SysOperateLogServiceImpl extends ServiceImpl<SysOperateLogDao, SysO
                 SysOperateLogQueryVO vo = new SysOperateLogQueryVO();
                 BeanUtils.copyProperties(p, vo);
                 return vo;
-            }).toList()));
+            }).collect(Collectors.toList())));
         }
         return ResponseData.success(PageDataVO.empty());
     }

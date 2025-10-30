@@ -10,15 +10,12 @@ import com.houtu.mp.module.sys.entity.SysMenuEntity;
 import com.houtu.mp.module.sys.entity.SysRoleEntity;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.support.type.MenuType;
-import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Resource;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,11 +39,11 @@ public class MenuServiceImpl implements MenuService {
         } else {
             List<SysRoleEntity> sysRoleEntityList = sysRoleDao.queryUserRoleList(sessionUser.getUserId(), 1);
             if (sysRoleEntityList == null || sysRoleEntityList.isEmpty()) {
-                return List.of();
+                return Collections.emptyList();
             }
-            sysMenuEntities = sysMenuDao.queryMenuByRoleIds(sysRoleEntityList.parallelStream().map(SysRoleEntity::getRoleId).toList(), 1, Arrays.stream(MenuType.values()).map(mt -> mt.getMenuType()).toList());
+            sysMenuEntities = sysMenuDao.queryMenuByRoleIds(sysRoleEntityList.parallelStream().map(SysRoleEntity::getRoleId).collect(Collectors.toList()), 1, Arrays.stream(MenuType.values()).map(mt -> mt.getMenuType()).collect(Collectors.toList()));
             if (sysMenuEntities == null || sysMenuEntities.isEmpty()) {
-                return List.of();
+                return Collections.emptyList();
             }
         }
         Map<Long, List<SysMenuEntity>> menuParentEntityMap = sysMenuEntities.stream().collect(Collectors.groupingBy(SysMenuEntity::getParentId));

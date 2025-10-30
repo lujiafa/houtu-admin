@@ -1,7 +1,7 @@
 package com.houtu.mp.module.base.service;
 
 import com.houtu.mp.support.type.LoginType;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 public interface LoginLogService {
 

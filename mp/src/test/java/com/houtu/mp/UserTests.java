@@ -5,7 +5,7 @@ import com.houtu.mp.module.sys.entity.SysUserEntity;
 import com.houtu.util.common.CodecData;
 import com.houtu.util.crypto.HMacSHAUtils;
 import com.houtu.util.crypto.type.HmacSHAAlgorithm;
-import jakarta.annotation.Resource;
+import javax.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;

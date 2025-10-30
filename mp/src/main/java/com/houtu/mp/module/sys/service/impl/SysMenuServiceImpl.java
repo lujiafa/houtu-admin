@@ -19,9 +19,9 @@ import com.houtu.mp.support.type.CommonStatus;
 import com.houtu.mp.support.type.MenuIconType;
 import com.houtu.mp.support.type.MenuPathType;
 import com.houtu.mp.support.type.MenuType;
-import com.houtu.core.web.ResponseData;
-import jakarta.annotation.Resource;
-import jakarta.validation.constraints.NotNull;
+import com.houtu.web.model.ResponseData;
+import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -65,7 +65,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
             sysMenuList = new ArrayList<>();
             List<SysRoleEntity> sysRoleList = sysRoleDao.queryUserRoleList(sessionUser.getUserId(), CommonStatus.ENABLED.getStatus());
             if (sysRoleList != null && !sysRoleList.isEmpty()) {
-                List<SysMenuEntity> sysMenuEntities = baseMapper.queryMenuByRoleIds(sysRoleList.parallelStream().map(SysRoleEntity::getRoleId).toList(), CommonStatus.ENABLED.getStatus(), null);
+                List<SysMenuEntity> sysMenuEntities = baseMapper.queryMenuByRoleIds(sysRoleList.parallelStream().map(SysRoleEntity::getRoleId).collect(Collectors.toList()), CommonStatus.ENABLED.getStatus(), null);
                 sysMenuList.addAll(sysMenuEntities);
             }
         }

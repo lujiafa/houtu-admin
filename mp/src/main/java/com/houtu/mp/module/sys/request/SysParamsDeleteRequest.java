@@ -1,7 +1,7 @@
 package com.houtu.mp.module.sys.request;
 
 import com.houtu.web.model.form.PageForm;
-import jakarta.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 import lombok.Data;
 
 import java.util.List;

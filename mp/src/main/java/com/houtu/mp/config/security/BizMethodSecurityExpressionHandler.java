@@ -18,8 +18,8 @@ import java.util.function.Supplier;
 public class BizMethodSecurityExpressionHandler extends DefaultMethodSecurityExpressionHandler {
 
     @Override
-    public EvaluationContext createEvaluationContext(Supplier<Authentication> authentication, MethodInvocation mi) {
-        StandardEvaluationContext context = (StandardEvaluationContext) super.createEvaluationContext(authentication, mi);
+    public StandardEvaluationContext createEvaluationContextInternal(Authentication authentication, MethodInvocation mi) {
+        StandardEvaluationContext context = super.createEvaluationContextInternal(authentication, mi);
         MethodSecurityExpressionOperations delegate = (MethodSecurityExpressionOperations) context.getRootObject().getValue();
         BizSecurityExpressionRoot root = new BizSecurityExpressionRoot(delegate);
         context.setRootObject(root);
