@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -52,18 +53,26 @@ public class BizSecurityContextRepository implements SecurityContextRepository {
 
     @Override
     public void saveContext(SecurityContext context, HttpServletRequest request, HttpServletResponse response) {
-        if (context.getAuthentication() != null) {
-            String cacheKey = String.format(SESSION_KEY, request.getSession().getId());
+        if (context == null) {
+            return;
+        } else if (context.getAuthentication() == null) {
+            // 登出
+            String sessionId = request.getRequestedSessionId();
+            if (StringUtils.hasLength(sessionId)) {
+                String cacheKey = String.format(SESSION_KEY, sessionId);
+                redisTemplate.delete(cacheKey);
+            }
+        } else {
+            if (context.getAuthentication().isAuthenticated()) {
+                String cacheKey = String.format(SESSION_KEY, request.getRequestedSessionId());
+                // 登录-会话存储
+                redisTemplate.opsForValue().set(cacheKey, context, SESSION_TIMEOUT, TimeUnit.SECONDS);
+            }
+        }
+        if (context.getAuthentication() != null && context.getAuthentication().isAuthenticated()) {
+            String cacheKey = String.format(SESSION_KEY, request.getRequestedSessionId());
             // 登录-会话存储
             redisTemplate.opsForValue().set(cacheKey, context, SESSION_TIMEOUT, TimeUnit.SECONDS);
-        } else {
-            /**
-             * 登出时也会调用Repository.saveContext(..)方法，但参数SecurityContext.Authentication为null，可通过此实现登出（注意这里request.getSession()是一个新的Session，即sessionId已变化），详见：CompositeLogoutHandler、SecurityContextLogoutHandler类源码。
-             * 也可以通过如下实现登出：
-             *  HttpSecurity.logout(logoutConfigurer->logoutConfigurer.addLogoutHandler((req, resp, auth) -> {...｝))
-             */
-            String cacheKey = String.format(SESSION_KEY, request.getRequestedSessionId());
-            redisTemplate.delete(cacheKey);
         }
     }
 
