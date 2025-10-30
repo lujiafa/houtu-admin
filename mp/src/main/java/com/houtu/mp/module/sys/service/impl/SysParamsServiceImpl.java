@@ -12,7 +12,7 @@ import com.houtu.mp.module.sys.request.SysParamsUpdateRequest;
 import com.houtu.mp.module.sys.service.SysParamsService;
 import com.houtu.mp.module.sys.vo.SysParamsQueryVO;
 import com.houtu.mp.support.SessionContext;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;

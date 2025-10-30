@@ -12,7 +12,7 @@ import com.houtu.mp.module.sys.vo.SysMenuQueryBaseVO;
 import com.houtu.mp.module.sys.vo.SysRoleQueryVO;
 import com.houtu.mp.support.type.ModuleType;
 import com.houtu.mp.support.type.OperateType;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
 import jakarta.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;

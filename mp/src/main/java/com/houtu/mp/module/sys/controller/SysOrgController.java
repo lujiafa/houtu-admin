@@ -10,7 +10,7 @@ import com.houtu.mp.module.sys.request.SysOrgAddRequest;
 import com.houtu.mp.module.sys.request.SysOrgQueryRequest;
 import com.houtu.mp.module.sys.request.SysOrgUpdateRequest;
 import com.houtu.mp.module.sys.vo.SysOrgQueryVO;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
