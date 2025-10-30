@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -52,7 +53,22 @@ public class BizSecurityContextRepository implements SecurityContextRepository {
 
     @Override
     public void saveContext(SecurityContext context, HttpServletRequest request, HttpServletResponse response) {
-        if (context == null) return;
+        if (context == null) {
+            return;
+        } else if (context.getAuthentication() == null) {
+            // 登出
+            String sessionId = request.getRequestedSessionId();
+            if (StringUtils.hasLength(sessionId)) {
+                String cacheKey = String.format(SESSION_KEY, sessionId);
+                redisTemplate.delete(cacheKey);
+            }
+        } else {
+            if (context.getAuthentication().isAuthenticated()) {
+                String cacheKey = String.format(SESSION_KEY, request.getRequestedSessionId());
+                // 登录-会话存储
+                redisTemplate.opsForValue().set(cacheKey, context, SESSION_TIMEOUT, TimeUnit.SECONDS);
+            }
+        }
         if (context.getAuthentication() != null && context.getAuthentication().isAuthenticated()) {
             String cacheKey = String.format(SESSION_KEY, request.getRequestedSessionId());
             // 登录-会话存储
