@@ -18,18 +18,14 @@ import java.util.function.Supplier;
 public class BizMethodSecurityExpressionHandler extends DefaultMethodSecurityExpressionHandler {
 
     @Override
-    public StandardEvaluationContext createEvaluationContextInternal(Authentication authentication, MethodInvocation mi) {
-        StandardEvaluationContext context = super.createEvaluationContextInternal(authentication, mi);
-        MethodSecurityExpressionOperations delegate = (MethodSecurityExpressionOperations) context.getRootObject().getValue();
-        BizSecurityExpressionRoot root = new BizSecurityExpressionRoot(delegate);
-        context.setRootObject(root);
-        return context;
+    protected MethodSecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication, MethodInvocation invocation) {
+        return new BizSecurityExpressionRoot(super.createSecurityExpressionRoot(authentication, invocation));
     }
 
-    static class BizSecurityExpressionRoot implements SecurityExpressionOperations {
-        private SecurityExpressionOperations delegate;
+    static class BizSecurityExpressionRoot implements MethodSecurityExpressionOperations {
+        private MethodSecurityExpressionOperations delegate;
 
-        public BizSecurityExpressionRoot(SecurityExpressionOperations delegate) {
+        public BizSecurityExpressionRoot(MethodSecurityExpressionOperations delegate) {
             this.delegate = delegate;
         }
 
@@ -104,6 +100,31 @@ public class BizMethodSecurityExpressionHandler extends DefaultMethodSecurityExp
                 return ((SimpleUser) principal).isAdmin();
             }
             return false;
+        }
+
+        @Override
+        public void setFilterObject(Object filterObject) {
+            delegate.setFilterObject(filterObject);
+        }
+
+        @Override
+        public Object getFilterObject() {
+            return delegate.getFilterObject();
+        }
+
+        @Override
+        public void setReturnObject(Object returnObject) {
+            delegate.setReturnObject(returnObject);
+        }
+
+        @Override
+        public Object getReturnObject() {
+            return delegate.getReturnObject();
+        }
+
+        @Override
+        public Object getThis() {
+            return delegate.getThis();
         }
     }
 }

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Component;
@@ -34,30 +35,28 @@ public class BizSecurityContextRepository implements SecurityContextRepository {
     public SecurityContext loadContext(HttpRequestResponseHolder requestResponseHolder) {
         HttpServletRequest request = requestResponseHolder.getRequest();
         String sessionId = request.getRequestedSessionId();
-        if (sessionId == null) return null;
+        if (sessionId == null)
+            return SecurityContextHolder.createEmptyContext();
         String cacheKey = String.format(SESSION_KEY, sessionId);
         SecurityContext securityContext = (SecurityContext) redisTemplate.opsForValue().get(cacheKey);
-        if (securityContext != null && request.getAttribute(REQUEST_SESSION_RENEWAL_KEY) == null) {
-            redisTemplate.expire(cacheKey, SESSION_TIMEOUT, TimeUnit.SECONDS);
-            request.setAttribute(REQUEST_SESSION_RENEWAL_KEY, true);
+        if (securityContext == null) {
+            securityContext = SecurityContextHolder.createEmptyContext();
+        } else {
+            if (request.getAttribute(REQUEST_SESSION_RENEWAL_KEY) == null) {
+                redisTemplate.expire(cacheKey, SESSION_TIMEOUT, TimeUnit.SECONDS);
+                request.setAttribute(REQUEST_SESSION_RENEWAL_KEY, true);
+            }
         }
         return securityContext;
     }
 
     @Override
     public void saveContext(SecurityContext context, HttpServletRequest request, HttpServletResponse response) {
-        if (context.getAuthentication() != null) {
-            String cacheKey = String.format(SESSION_KEY, request.getSession().getId());
+        if (context == null) return;
+        if (context.getAuthentication() != null && context.getAuthentication().isAuthenticated()) {
+            String cacheKey = String.format(SESSION_KEY, request.getRequestedSessionId());
             // 登录-会话存储
             redisTemplate.opsForValue().set(cacheKey, context, SESSION_TIMEOUT, TimeUnit.SECONDS);
-        } else {
-            /**
-             * 登出时也会调用Repository.saveContext(..)方法，但参数SecurityContext.Authentication为null，可通过此实现登出（注意这里request.getSession()是一个新的Session，即sessionId已变化），详见：CompositeLogoutHandler、SecurityContextLogoutHandler类源码。
-             * 也可以通过如下实现登出：
-             *  HttpSecurity.logout(logoutConfigurer->logoutConfigurer.addLogoutHandler((req, resp, auth) -> {...｝))
-             */
-            String cacheKey = String.format(SESSION_KEY, request.getRequestedSessionId());
-            redisTemplate.delete(cacheKey);
         }
     }
 
