@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.houtu.mp.module.sys.entity.SysLoginLogEntity;
 import com.houtu.mp.module.sys.request.SysLoginQueryRequest;
 import com.houtu.mp.module.sys.vo.SysLoginLogQueryVO;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
 
 /**

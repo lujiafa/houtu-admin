@@ -1,17 +1,16 @@
 package com.houtu.mp.config.security;
 
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.core.context.DeferredSecurityContext;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,11 +42,6 @@ public class BizSecurityContextRepository implements SecurityContextRepository {
             request.setAttribute(REQUEST_SESSION_RENEWAL_KEY, true);
         }
         return securityContext;
-    }
-
-    @Override
-    public DeferredSecurityContext loadDeferredContext(HttpServletRequest request) {
-        return SecurityContextRepository.super.loadDeferredContext(request);
     }
 
     @Override

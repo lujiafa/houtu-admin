@@ -1,6 +1,6 @@
 package com.houtu.mp.aspect;
 
-import com.houtu.core.annotation.CachingParam;
+import com.houtu.core.web.annotation.CachingParam;
 import com.houtu.mp.support.type.ModuleType;
 import com.houtu.mp.support.type.OperateType;
 

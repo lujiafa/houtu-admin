@@ -23,16 +23,15 @@ spring:
       connection-timeout: 30000
       connection-test-query: select 1
       auto-commit: true
-  data:
-    redis:
-      database: 0
-      host: 127.0.0.1
-      port: 6379
-      password: redis123
-      timeout: 15s
-      lettuce:
-        pool:
-          max-active: 6
-          max-wait: 30s
-          max-idle: 6
-          min-idle: 2
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password: redis123
+    timeout: 15s
+    lettuce:
+      pool:
+        max-active: 6
+        max-wait: 30s
+        max-idle: 6
+        min-idle: 2

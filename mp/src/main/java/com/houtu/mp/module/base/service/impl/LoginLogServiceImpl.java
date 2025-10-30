@@ -7,8 +7,8 @@ import com.houtu.mp.module.sys.entity.SysLoginLogEntity;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.support.type.LoginType;
 import com.houtu.util.web.WebUtils;
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 

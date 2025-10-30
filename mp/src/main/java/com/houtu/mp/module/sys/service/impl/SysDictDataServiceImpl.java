@@ -12,8 +12,8 @@ import com.houtu.mp.module.sys.request.SysDictDataUpdateRequest;
 import com.houtu.mp.module.sys.service.SysDictDataService;
 import com.houtu.mp.module.sys.vo.SysDictDataQueryVO;
 import com.houtu.mp.support.SessionContext;
-import com.houtu.core.web.ResponseData;
-import jakarta.annotation.Resource;
+import com.houtu.web.model.ResponseData;
+import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -53,7 +54,7 @@ public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataDao, SysDictD
                 SysDictDataQueryVO vo = new SysDictDataQueryVO();
                 BeanUtils.copyProperties(p, vo);
                 return vo;
-            }).toList());
+            }).collect(Collectors.toList()));
         }
         return ResponseData.success(Collections.emptyList());
     }

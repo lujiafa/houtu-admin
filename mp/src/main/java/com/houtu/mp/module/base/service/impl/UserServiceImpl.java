@@ -20,8 +20,8 @@ import com.houtu.mp.module.sys.service.impl.SysUserServiceImpl;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.util.OTPUtils;
 import com.houtu.util.common.BeanUtils;
-import com.houtu.core.web.ResponseData;
-import jakarta.annotation.Resource;
+import com.houtu.web.model.ResponseData;
+import javax.annotation.Resource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -55,11 +56,11 @@ public class UserServiceImpl implements UserService {
         Long sessionUserId = sessionUser.getUserId();
         SysUserEntity userEntity = sysLoginLogService.findById(sessionUserId);
         UserInfoVO userInfoVO = BeanUtils.copyProperties(userEntity, UserInfoVO.class);
-        List<String> orgNames = sysUserOrgDao.selectUserOrgByUserId(sessionUserId).stream().map(map -> map.get("orgName")).toList();
+        List<String> orgNames = sysUserOrgDao.selectUserOrgByUserId(sessionUserId).stream().map(map -> map.get("orgName")).collect(Collectors.toList());
         userInfoVO.setOrgNames(orgNames);
-        List<String> postNames = sysUserPostDao.selectUserPostByUserId(sessionUserId).stream().map(map -> map.get("postName")).toList();
+        List<String> postNames = sysUserPostDao.selectUserPostByUserId(sessionUserId).stream().map(map -> map.get("postName")).collect(Collectors.toList());
         userInfoVO.setOrgPosts(postNames);
-        List<String> roleNames = sysUserRoleDao.selectUserRoleByUserId(sessionUserId).stream().map(map -> map.get("roleName")).toList();
+        List<String> roleNames = sysUserRoleDao.selectUserRoleByUserId(sessionUserId).stream().map(map -> map.get("roleName")).collect(Collectors.toList());
         userInfoVO.setRoleNames(roleNames);
         return userInfoVO;
     }

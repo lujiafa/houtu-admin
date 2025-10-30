@@ -18,13 +18,14 @@ import com.houtu.mp.module.sys.vo.SysUserSecretVO;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.support.type.CommonStatus;
 import com.houtu.mp.util.OTPUtils;
+import com.houtu.util.common.CodecData;
 import com.houtu.util.crypto.Base64Utils;
 import com.houtu.util.crypto.HMacMD5Utils;
 import com.houtu.util.crypto.HMacSHAUtils;
 import com.houtu.util.data.HexUtils;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
-import jakarta.annotation.Resource;
+import javax.annotation.Resource;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
@@ -36,10 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -131,30 +129,30 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
                 SysUserQueryVO vo = new SysUserQueryVO();
                 BeanUtils.copyProperties(p, vo);
                 return vo;
-            }).toList();
-            List<Long> userIds = volist.stream().map(SysUserQueryVO::getUserId).toList();
+            }).collect(Collectors.toList());
+            List<Long> userIds = volist.stream().map(SysUserQueryVO::getUserId).collect(Collectors.toList());
             Map<Long, List<SysUserPostEntity>> userPostMap = sysUserPostDao.selectList(new QueryWrapper<SysUserPostEntity>().in("user_id", userIds)).stream().collect(Collectors.groupingBy(SysUserPostEntity::getUserId));
             Map<Long, List<SysUserOrgEntity>> userOrgMap = sysUserOrgDao.selectList(new QueryWrapper<SysUserOrgEntity>().in("user_id", userIds)).stream().collect(Collectors.groupingBy(SysUserOrgEntity::getUserId));
-            List<SysUserRoleEntity> userRoleList = sysUserRoleDao.selectList(new QueryWrapper<SysUserRoleEntity>().in("user_id", userIds)).stream().toList();
+            List<SysUserRoleEntity> userRoleList = sysUserRoleDao.selectList(new QueryWrapper<SysUserRoleEntity>().in("user_id", userIds)).stream().collect(Collectors.toList());
             Map<Long, List<SysUserRoleEntity>> userRoleMap = userRoleList.stream().collect(Collectors.groupingBy(SysUserRoleEntity::getUserId));
             Map<Long, String> rolePermsMap;
             if (!userRoleList.isEmpty()) {
-                rolePermsMap = sysRoleDao.selectList(new QueryWrapper<SysRoleEntity>().in("role_id", userRoleList.stream().map(SysUserRoleEntity::getRoleId).toList())).stream().collect(Collectors.toMap(SysRoleEntity::getRoleId, SysRoleEntity::getRolePerms));
+                rolePermsMap = sysRoleDao.selectList(new QueryWrapper<SysRoleEntity>().in("role_id", userRoleList.stream().map(SysUserRoleEntity::getRoleId).collect(Collectors.toList()))).stream().collect(Collectors.toMap(SysRoleEntity::getRoleId, SysRoleEntity::getRolePerms));
             } else {
                 rolePermsMap = null;
             }
             volist.stream().forEach(v -> {
                 List<SysUserPostEntity> sysUserPostEntities = userPostMap.get(v.getUserId());
                 if (sysUserPostEntities != null) {
-                    v.setPostIds(sysUserPostEntities.stream().map(SysUserPostEntity::getPostId).toList());
+                    v.setPostIds(sysUserPostEntities.stream().map(SysUserPostEntity::getPostId).collect(Collectors.toList()));
                 }
                 List<SysUserOrgEntity> sysUserOrgEntities = userOrgMap.get(v.getUserId());
                 if (sysUserOrgEntities != null) {
-                    v.setOrgIds(sysUserOrgEntities.stream().map(SysUserOrgEntity::getOrgId).toList());
+                    v.setOrgIds(sysUserOrgEntities.stream().map(SysUserOrgEntity::getOrgId).collect(Collectors.toList()));
                 }
                 List<SysUserRoleEntity> sysUserRoleEntities = userRoleMap.get(v.getUserId());
                 if (sysUserRoleEntities != null) {
-                    v.setRoleIds(sysUserRoleEntities.stream().map(SysUserRoleEntity::getRoleId).toList());
+                    v.setRoleIds(sysUserRoleEntities.stream().map(SysUserRoleEntity::getRoleId).collect(Collectors.toList()));
                     v.setAdmin(sysUserRoleEntities.stream().anyMatch(p -> SecuritySupport.hasAdmin(rolePermsMap.get(p.getRoleId()))));
                 }
             });
@@ -169,7 +167,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
         SysUserEntity userEntity = new SysUserEntity();
         BeanUtils.copyProperties(request, userEntity);
         String originPassword = RandomStringUtils.randomAlphanumeric(10);
-        userEntity.setPassword(passwordEncoder.encode(HexUtils.toHex(HMacMD5Utils.encryptHMAC(originPassword, originPassword, StandardCharsets.UTF_8.name()))));
+        userEntity.setPassword(passwordEncoder.encode(HMacMD5Utils.hash(CodecData.utf8(originPassword), CodecData.utf8(originPassword)).hex().toLowerCase()));
         userEntity.setEnableMFA(BooleanUtils.toInteger(securityProperties.isMfa() && securityProperties.isDefaultEnableMFA()));
         userEntity.setGoogleOTPKey(OTPUtils.generateSecretKey());
         userEntity.setCreateBy(SessionContext.getSessionUserId());
@@ -184,7 +182,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
                 userOrgEntity.setOrgId(o);
                 userOrgEntity.setUserId(userEntity.getUserId());
                 return userOrgEntity;
-            }).toList();
+            }).collect(Collectors.toList());
             sysUserOrgDao.insert(userOrgEntities);
         }
         if (request.getPostIds() != null && request.getPostIds().size() > 0) {
@@ -193,7 +191,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
                 userPostEntity.setPostId(p);
                 userPostEntity.setUserId(userEntity.getUserId());
                 return userPostEntity;
-            }).toList();
+            }).collect(Collectors.toList());
             sysUserPostDao.insert(userPostEntities);
         }
         SysUserSecretVO sysUserSecretVO = new SysUserSecretVO();
@@ -215,15 +213,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
         if (num <= 0) {
             return ResponseData.fail(ErrorCode.build(4, LocaleContextHolder.getLocale()));
         }
-        List<Long> reqOrgIds = request.getOrgIds() == null ? List.of() : request.getOrgIds();
-        List<Long> existsOrgIds = sysUserOrgDao.selectList(new QueryWrapper<SysUserOrgEntity>().eq("user_id", request.getUserId())).stream().map(p -> p.getOrgId()).toList();
-        List<Long> addOrgIds = reqOrgIds.stream().filter(o -> !existsOrgIds.contains(o)).toList();
-        List<Long> delOrgIds = existsOrgIds.stream().filter(o -> !reqOrgIds.contains(o)).toList();
+        List<Long> reqOrgIds = request.getOrgIds() == null ? Collections.emptyList() : request.getOrgIds();
+        List<Long> existsOrgIds = sysUserOrgDao.selectList(new QueryWrapper<SysUserOrgEntity>().eq("user_id", request.getUserId())).stream().map(p -> p.getOrgId()).collect(Collectors.toList());
+        List<Long> addOrgIds = reqOrgIds.stream().filter(o -> !existsOrgIds.contains(o)).collect(Collectors.toList());
+        List<Long> delOrgIds = existsOrgIds.stream().filter(o -> !reqOrgIds.contains(o)).collect(Collectors.toList());
 
-        List<Long> reqPostIds = request.getPostIds() == null ? List.of() : request.getPostIds();
-        List<Long> existsPostIds = sysUserPostDao.selectList(new QueryWrapper<SysUserPostEntity>().eq("user_id", request.getUserId())).stream().map(p -> p.getPostId()).toList();
-        List<Long> addPostIds = reqPostIds.stream().filter(o -> !existsPostIds.contains(o)).toList();
-        List<Long> delPostIds = existsPostIds.stream().filter(o -> !reqPostIds.contains(o)).toList();
+        List<Long> reqPostIds = request.getPostIds() == null ? Collections.emptyList() : request.getPostIds();
+        List<Long> existsPostIds = sysUserPostDao.selectList(new QueryWrapper<SysUserPostEntity>().eq("user_id", request.getUserId())).stream().map(p -> p.getPostId()).collect(Collectors.toList());
+        List<Long> addPostIds = reqPostIds.stream().filter(o -> !existsPostIds.contains(o)).collect(Collectors.toList());
+        List<Long> delPostIds = existsPostIds.stream().filter(o -> !reqPostIds.contains(o)).collect(Collectors.toList());
 
         if (addOrgIds.size() > 0) {
             sysUserOrgDao.insert(addOrgIds.stream().map(o -> {
@@ -231,7 +229,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
                 userOrgEntity.setOrgId(o);
                 userOrgEntity.setUserId(userEntity.getUserId());
                 return userOrgEntity;
-            }).toList());
+            }).collect(Collectors.toList()));
         }
         if (delOrgIds.size() > 0) {
             sysUserOrgDao.delete(new QueryWrapper<SysUserOrgEntity>().eq("user_id", userEntity.getUserId()).in("org_id", delOrgIds));
@@ -242,7 +240,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
                 userPostEntity.setPostId(o);
                 userPostEntity.setUserId(userEntity.getUserId());
                 return userPostEntity;
-            }).toList());
+            }).collect(Collectors.toList()));
         }
         if (delPostIds.size() > 0) {
             sysUserPostDao.delete(new QueryWrapper<SysUserPostEntity>().eq("user_id", userEntity.getUserId()).in("post_id", delPostIds));
@@ -261,7 +259,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
         SysUserEntity updateEntity = new SysUserEntity();
         updateEntity.setUserId(userId);
         String originPassword = RandomStringUtils.randomAlphanumeric(10);
-        String oncePassword = HexUtils.toHex(HMacSHAUtils.encryptHMacSHA256(originPassword, originPassword, StandardCharsets.UTF_8.name())).toLowerCase();
+        String oncePassword = passwordEncoder.encode(HMacMD5Utils.hash(CodecData.utf8(originPassword), CodecData.utf8(originPassword)).hex().toLowerCase());
         updateEntity.setPassword(passwordEncoder.encode(oncePassword));
         String GoogleOTPKey = OTPUtils.generateSecretKey();
         updateEntity.setGoogleOTPKey(GoogleOTPKey);
@@ -280,7 +278,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
     @Transactional
     @Override
     public ResponseData authorize(SysUserAuthorizeRequest request) {
-        List<Long> reqRoleIds = request.getRoleIds() == null ? List.of() : request.getRoleIds();
+        List<Long> reqRoleIds = request.getRoleIds() == null ? Collections.emptyList() : request.getRoleIds();
         // 普通管理员授权限制逻辑
         if (!SessionContext.isAdmin()) {
             // 普通用户不能授权超管角色给其他用户
@@ -295,9 +293,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
                 return ResponseData.fail(ErrorCode.build(4, Stream.of("普通管理员不能为含有超管权限用户授权").toArray()));
         }
 
-        List<Long> existsRoleIds = sysUserRoleDao.selectList(new QueryWrapper<SysUserRoleEntity>().eq("user_id", request.getUserId())).stream().map(p -> p.getRoleId()).toList();
-        List<Long> addRoleIds = reqRoleIds.stream().filter(o -> !existsRoleIds.contains(o)).toList();
-        List<Long> delRoleIds = existsRoleIds.stream().filter(o -> !reqRoleIds.contains(o)).toList();
+        List<Long> existsRoleIds = sysUserRoleDao.selectList(new QueryWrapper<SysUserRoleEntity>().eq("user_id", request.getUserId())).stream().map(p -> p.getRoleId()).collect(Collectors.toList());
+        List<Long> addRoleIds = reqRoleIds.stream().filter(o -> !existsRoleIds.contains(o)).collect(Collectors.toList());
+        List<Long> delRoleIds = existsRoleIds.stream().filter(o -> !reqRoleIds.contains(o)).collect(Collectors.toList());
 
         if (addRoleIds.size() > 0) {
             sysUserRoleDao.insert(addRoleIds.stream().map(o -> {
@@ -305,7 +303,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
                 userRoleEntity.setRoleId(o);
                 userRoleEntity.setUserId(request.getUserId());
                 return userRoleEntity;
-            }).toList());
+            }).collect(Collectors.toList()));
         }
         if (delRoleIds.size() > 0) {
             sysUserRoleDao.delete(new QueryWrapper<SysUserRoleEntity>().eq("user_id", request.getUserId()).in("role_id", delRoleIds));

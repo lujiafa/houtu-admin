@@ -9,8 +9,8 @@ import com.houtu.mp.config.security.BizCaptchaAuthenticationFilter;
 import com.houtu.mp.config.security.BizSecurityContextRepository;
 import com.houtu.mp.config.security.MFAAuthorizationManager;
 import com.houtu.mp.config.security.SimpleUser;
-import com.houtu.core.web.ResponseData;
-import jakarta.servlet.DispatcherType;
+import com.houtu.web.model.ResponseData;
+import javax.servlet.DispatcherType;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -69,13 +70,13 @@ public class SpringSecurityConfig {
         http.csrf(csrfConfigurer -> csrfConfigurer.disable())
                 .authorizeHttpRequests(authorize -> { // 授权过滤器配置
                     authorize.dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
-                            .requestMatchers("/api/login", "/api/getCaptcha").permitAll();
+                            .antMatchers("/api/login", "/api/getCaptcha").permitAll();
                     if (securityProperties.isMfa()) {
                         // 启用MFA
-                        authorize.requestMatchers("/api/mfa/mfaTypes", "/api/mfa/send", "/api/mfa/verify").permitAll()
-                                .requestMatchers("/api/**").access(new MFAAuthorizationManager(AuthenticatedAuthorizationManager.fullyAuthenticated()));
+                        authorize.antMatchers("/api/mfa/mfaTypes", "/api/mfa/send", "/api/mfa/verify").permitAll()
+                                .antMatchers("/api/**").access(new MFAAuthorizationManager(AuthenticatedAuthorizationManager.authenticated()));
                     } else {
-                        authorize.requestMatchers("/api/**").fullyAuthenticated();
+                        authorize.antMatchers("/api/**").authenticated();
                     }
                     authorize.anyRequest().denyAll();
                 })
@@ -94,7 +95,7 @@ public class SpringSecurityConfig {
                             // 登录认证失败
                             .failureHandler((req, resp, ex) -> {
                                 Optional exceptionOptional = Arrays.stream(ExceptionUtils.getThrowables(ex)).filter(e -> e instanceof BusinessException).findFirst();
-                                if (exceptionOptional.isEmpty()) {
+                                if (!exceptionOptional.isPresent()) {
                                     ResponseUtils.responseJson(resp, ResponseData.fail(ErrorCode.build(12, req.getLocale())));
                                 } else {
                                     ResponseUtils.responseJson(resp, ResponseData.fail(((BusinessException) exceptionOptional.get()).getErrorCode()));

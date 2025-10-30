@@ -16,16 +16,17 @@ import com.houtu.mp.module.sys.vo.SysRoleQueryUserOperableVO;
 import com.houtu.mp.module.sys.vo.SysRoleQueryVO;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.support.type.CommonStatus;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
-import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -62,13 +63,13 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRoleEntity> i
                 SysRoleQueryUserOperableVO baseVO = new SysRoleQueryUserOperableVO();
                 BeanUtils.copyProperties(entity, baseVO);
                 return baseVO;
-            }).toList();
+            }).collect(Collectors.toList());
         }
         return entityList.stream().filter(r ->  !SecuritySupport.hasAdmin(r.getRolePerms())).map(entity -> {
             SysRoleQueryUserOperableVO baseVO = new SysRoleQueryUserOperableVO();
             BeanUtils.copyProperties(entity, baseVO);
             return baseVO;
-        }).toList();
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -82,7 +83,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRoleEntity> i
         if (page.getRecords() != null && page.getRecords().size() > 0) {
             List<SysRoleEntity> records = page.getRecords();
             Map<Long, List<SysRoleMenuEntity>> roleMenuMap = sysRoleMenuDao.selectList(new QueryWrapper<SysRoleMenuEntity>()
-                            .in("role_id", page.getRecords().stream().map(SysRoleEntity::getRoleId).toList()))
+                            .in("role_id", page.getRecords().stream().map(SysRoleEntity::getRoleId).collect(Collectors.toList())))
                     .stream().collect(Collectors.groupingBy(p -> p.getRoleId()));
             return ResponseData.success(PageDataVO.build(page.getCurrent(), page.getSize(), page.getTotal(), page.getRecords().stream().map(p -> {
                 SysRoleQueryVO vo = new SysRoleQueryVO();
@@ -90,12 +91,12 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRoleEntity> i
                 vo.setAdmin(SecuritySupport.hasAdmin(p.getRolePerms()));
                 List<SysRoleMenuEntity> roleMenuEntities = roleMenuMap.get(p.getRoleId());
                 if (roleMenuEntities != null) {
-                    vo.setMenuIds(roleMenuEntities.stream().map(SysRoleMenuEntity::getMenuId).toList());
+                    vo.setMenuIds(roleMenuEntities.stream().map(SysRoleMenuEntity::getMenuId).collect(Collectors.toList()));
                 } else {
-                    vo.setMenuIds(List.of());
+                    vo.setMenuIds(Collections.emptyList());
                 }
                 return vo;
-            }).toList()));
+            }).collect(Collectors.toList())));
         }
         return ResponseData.success(PageDataVO.empty());
     }
@@ -134,7 +135,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRoleEntity> i
                 roleMenuEntity.setMenuId(m);
                 roleMenuEntity.setRoleId(roleId);
                 return roleMenuEntity;
-            }).toList();
+            }).collect(Collectors.toList());
             sysRoleMenuDao.insert(roleMenuEntities);
         }
         return ResponseData.success();
@@ -173,10 +174,10 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRoleEntity> i
             return ResponseData.success();
         }
 
-        List<Long> existsMenuIds = sysRoleMenuDao.selectList(new QueryWrapper<SysRoleMenuEntity>().eq("role_id", request.getRoleId())).stream().map(p -> p.getMenuId()).toList();
-        List<Long> reqMenuIds = request.getMenuIds() == null ? List.of() : request.getMenuIds();
-        List<Long> delMenuIds = existsMenuIds.stream().filter(p -> !reqMenuIds.contains(p)).toList();
-        List<Long> addMenuIds = reqMenuIds.stream().filter(p -> !existsMenuIds.contains(p)).toList();
+        List<Long> existsMenuIds = sysRoleMenuDao.selectList(new QueryWrapper<SysRoleMenuEntity>().eq("role_id", request.getRoleId())).stream().map(p -> p.getMenuId()).collect(Collectors.toList());
+        List<Long> reqMenuIds = request.getMenuIds() == null ? Collections.emptyList() : request.getMenuIds();
+        List<Long> delMenuIds = existsMenuIds.stream().filter(p -> !reqMenuIds.contains(p)).collect(Collectors.toList());
+        List<Long> addMenuIds = reqMenuIds.stream().filter(p -> !existsMenuIds.contains(p)).collect(Collectors.toList());
         if (delMenuIds.size() > 0) {
             sysRoleMenuDao.delete(new QueryWrapper<SysRoleMenuEntity>()
                     .eq("role_id", request.getRoleId())
@@ -188,7 +189,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRoleEntity> i
                 roleMenuEntity.setMenuId(m);
                 roleMenuEntity.setRoleId(request.getRoleId());
                 return roleMenuEntity;
-            }).toList();
+            }).collect(Collectors.toList());
             sysRoleMenuDao.insert(roleMenuEntities);
         }
         return ResponseData.success();

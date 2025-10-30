@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -21,7 +22,7 @@ public class SysUserQueryRequest extends PageForm {
 
     public List<Long> getParseOrgIds() {
         if (orgIds == null) {
-            return List.of();
+            return Collections.emptyList();
         }
         List<Long> newOrgIds = new ArrayList<>();
         String[] strArray = orgIds.split(",");

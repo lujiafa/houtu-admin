@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
@@ -22,7 +23,7 @@ public class MFASelector implements InitializingBean, ApplicationContextAware {
     private ApplicationContext applicationContext;
 
     public static List<MFAProcessor.MFAType> getMfaTypes() {
-        return PROCESSOR_MAP.values().stream().map(MFAProcessor::getMfaType).toList();
+        return PROCESSOR_MAP.values().stream().map(MFAProcessor::getMfaType).collect(Collectors.toList());
     }
 
     public static MFAProcessor getMFAProcessor(String mfaType) {
