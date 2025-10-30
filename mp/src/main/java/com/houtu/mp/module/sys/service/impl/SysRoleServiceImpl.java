@@ -16,7 +16,7 @@ import com.houtu.mp.module.sys.vo.SysRoleQueryUserOperableVO;
 import com.houtu.mp.module.sys.vo.SysRoleQueryVO;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.support.type.CommonStatus;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 import com.houtu.web.model.vo.PageDataVO;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;

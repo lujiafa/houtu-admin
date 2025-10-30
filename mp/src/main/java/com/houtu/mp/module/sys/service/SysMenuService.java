@@ -7,7 +7,7 @@ import com.houtu.mp.module.sys.request.SysMenuQueryRequest;
 import com.houtu.mp.module.sys.request.SysMenuUpdateRequest;
 import com.houtu.mp.module.sys.vo.SysMenuQueryBaseVO;
 import com.houtu.mp.module.sys.vo.SysMenuQueryVO;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 
 import java.util.List;
 

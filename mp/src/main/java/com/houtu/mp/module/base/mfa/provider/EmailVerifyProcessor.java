@@ -7,7 +7,7 @@ import com.houtu.mp.module.base.mfa.MFAProcessor;
 import com.houtu.mp.module.sys.entity.SysUserEntity;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.util.web.WebUtils;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.RandomStringUtils;

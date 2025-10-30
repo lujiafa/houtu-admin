@@ -15,7 +15,7 @@ import com.houtu.mp.module.sys.request.SysOrgQueryRequest;
 import com.houtu.mp.module.sys.request.SysOrgUpdateRequest;
 import com.houtu.mp.module.sys.vo.SysOrgQueryBaseVO;
 import com.houtu.mp.module.sys.vo.SysOrgQueryVO;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;

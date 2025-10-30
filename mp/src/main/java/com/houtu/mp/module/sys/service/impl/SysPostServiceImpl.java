@@ -17,7 +17,7 @@ import com.houtu.mp.module.sys.request.SysPostUpdateRequest;
 import com.houtu.web.model.vo.PageDataVO;
 import com.houtu.mp.module.sys.vo.SysPostQueryBaseVO;
 import com.houtu.mp.module.sys.vo.SysPostQueryVO;
-import com.houtu.core.web.ResponseData;
+import com.houtu.web.model.ResponseData;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
