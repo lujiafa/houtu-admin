@@ -54,9 +54,9 @@ public class KaptchaConfig {
         // 字符集
         properties.put(KAPTCHA_TEXTPRODUCER_CHAR_STRING, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
         // 验证码文本字符长度 默认为5
-        properties.put(KAPTCHA_TEXTPRODUCER_CHAR_LENGTH, "5");
+        properties.put(KAPTCHA_TEXTPRODUCER_CHAR_LENGTH, "4");
         // 验证码文本字符间距 默认为2
-        properties.put(KAPTCHA_TEXTPRODUCER_CHAR_SPACE, "6");
+        properties.put(KAPTCHA_TEXTPRODUCER_CHAR_SPACE, "8");
         // 干扰实现类
         properties.setProperty(KAPTCHA_NOISE_IMPL, "com.google.code.kaptcha.impl.DefaultNoise");
         // 图片样式 水纹:com.google.code.kaptcha.impl.WaterRipple 鱼眼:com.google.code.kaptcha.impl.FishEyeGimpy 阴影:com.google.code.kaptcha.impl.ShadowGimpy

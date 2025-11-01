@@ -1,14 +1,13 @@
 package com.houtu.mp.config;
 
 import com.houtu.core.exception.BusinessException;
+import com.houtu.core.exception.ErrorCode;
+import com.houtu.mp.config.security.BizCaptchaAuthenticationFilter;
+import com.houtu.mp.config.security.MFAAuthorizationManager;
+import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.mp.module.base.service.LoginLogService;
 import com.houtu.mp.support.type.LoginType;
 import com.houtu.mp.util.ResponseUtils;
-import com.houtu.core.exception.ErrorCode;
-import com.houtu.mp.config.security.BizCaptchaAuthenticationFilter;
-import com.houtu.mp.config.security.BizSecurityContextRepository;
-import com.houtu.mp.config.security.MFAAuthorizationManager;
-import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.web.model.ResponseData;
 import jakarta.servlet.DispatcherType;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -60,7 +59,6 @@ public class SpringSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                   BizSecurityContextRepository securityContextRepository,
                                                    StringRedisTemplate stringRedisTemplate,
                                                    SecurityProperties securityProperties,
                                                    LoginLogService loginLogService) throws Exception {
@@ -95,7 +93,7 @@ public class SpringSecurityConfig {
                             // 登录认证失败
                             .failureHandler((req, resp, ex) -> {
                                 Optional exceptionOptional = Arrays.stream(ExceptionUtils.getThrowables(ex)).filter(e -> e instanceof BusinessException).findFirst();
-                                if (exceptionOptional.isEmpty()) {
+                                if (!exceptionOptional.isPresent()) {
                                     ResponseUtils.responseJson(resp, ResponseData.fail(ErrorCode.build(12, req.getLocale())));
                                 } else {
                                     ResponseUtils.responseJson(resp, ResponseData.fail(((BusinessException) exceptionOptional.get()).getErrorCode()));
@@ -116,11 +114,6 @@ public class SpringSecurityConfig {
                             .logoutSuccessHandler((req, resp, auth) -> {
                                 ResponseUtils.responseJson(resp, ResponseData.success(req.getLocale()));
                             });
-                })
-                .securityContext(securityContextConfigurer -> {
-                    securityContextConfigurer
-                            // 安全上下文持久化处理器
-                            .securityContextRepository(securityContextRepository);
                 })
                 .exceptionHandling(exceptionConfigurer -> {
                     exceptionConfigurer
