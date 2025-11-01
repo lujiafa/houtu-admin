@@ -13,7 +13,7 @@ export default {
         password: '',
         captcha: ''
       },
-      captchaUrl: '/api/getCaptcha',
+      captchaUrl: new URL('/api/getCaptcha', import.meta.env.VITE_BASE_API_URL).href,
       logoImg: import.meta.env.VITE_APP_LOGO || 'src/assets/default-logo.svg',
     };
   },
@@ -46,7 +46,8 @@ export default {
       });
     },
     resetLoadCaptcha() {
-      this.captchaUrl = '/api/getCaptcha?t=' + new Date().getTime();
+      const baseUrl = import.meta.env.VITE_BASE_API_URL;
+      this.captchaUrl = new URL(`/api/getCaptcha?t=${new Date().getTime()}`, baseUrl).href;
     }
   }
 };
