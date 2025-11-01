@@ -36,3 +36,6 @@ spring:
           max-wait: 30s
           max-idle: 6
           min-idle: 2
+  session:
+    store-type: redis
+    timeout: 1800s
