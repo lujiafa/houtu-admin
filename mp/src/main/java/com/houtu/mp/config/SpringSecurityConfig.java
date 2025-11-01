@@ -1,16 +1,14 @@
 package com.houtu.mp.config;
 
 import com.houtu.core.exception.BusinessException;
+import com.houtu.core.exception.ErrorCode;
+import com.houtu.mp.config.security.BizCaptchaAuthenticationFilter;
+import com.houtu.mp.config.security.MFAAuthorizationManager;
+import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.mp.module.base.service.LoginLogService;
 import com.houtu.mp.support.type.LoginType;
 import com.houtu.mp.util.ResponseUtils;
-import com.houtu.core.exception.ErrorCode;
-import com.houtu.mp.config.security.BizCaptchaAuthenticationFilter;
-import com.houtu.mp.config.security.BizSecurityContextRepository;
-import com.houtu.mp.config.security.MFAAuthorizationManager;
-import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.web.model.ResponseData;
-import javax.servlet.DispatcherType;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +27,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import javax.servlet.DispatcherType;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -61,7 +59,6 @@ public class SpringSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                   BizSecurityContextRepository securityContextRepository,
                                                    StringRedisTemplate stringRedisTemplate,
                                                    SecurityProperties securityProperties,
                                                    LoginLogService loginLogService) throws Exception {
@@ -117,11 +114,6 @@ public class SpringSecurityConfig {
                             .logoutSuccessHandler((req, resp, auth) -> {
                                 ResponseUtils.responseJson(resp, ResponseData.success(req.getLocale()));
                             });
-                })
-                .securityContext(securityContextConfigurer -> {
-                    securityContextConfigurer
-                            // 安全上下文持久化处理器
-                            .securityContextRepository(securityContextRepository);
                 })
                 .exceptionHandling(exceptionConfigurer -> {
                     exceptionConfigurer

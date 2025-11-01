@@ -3,7 +3,6 @@ package com.houtu.mp.module.base.controller;
 import com.houtu.core.exception.ErrorCode;
 import com.houtu.mp.aspect.OperateLog;
 import com.houtu.mp.config.SecurityProperties;
-import com.houtu.mp.config.security.BizSecurityContextRepository;
 import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.mp.module.base.mfa.MFAProcessor;
 import com.houtu.mp.module.base.mfa.MFASelector;
@@ -18,19 +17,17 @@ import com.houtu.mp.support.type.LoginType;
 import com.houtu.mp.support.type.ModuleType;
 import com.houtu.mp.support.type.OperateType;
 import com.houtu.web.model.ResponseData;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -43,8 +40,6 @@ public class MFAController {
     private UserService userService;
     @Resource
     private LoginLogService loginLogService;
-    @Resource
-    private BizSecurityContextRepository bizSecurityContextRepository;
 
     /**
      * 获取MFA启用状态，是否启用MFA
@@ -89,7 +84,7 @@ public class MFAController {
         SimpleUser sessionUser = SessionContext.getSessionUser();
         sessionUser.setEnableMFA(true);
         sessionUser.setMfaPassed(true);
-        bizSecurityContextRepository.saveContext(SecurityContextHolder.getContext(), req, resp);
+        SessionContext.update(req);
         return responseData;
     }
 
@@ -144,7 +139,7 @@ public class MFAController {
         if (responseData.hasSuccess()) {
             SimpleUser sessionUser = SessionContext.getSessionUser();
             sessionUser.setMfaPassed(true);
-            bizSecurityContextRepository.saveContext(SecurityContextHolder.getContext(), req, resp);
+            SessionContext.update(req);
             // 登录成功记录登录日志
             loginLogService.log(req, LoginType.LOGIN, sessionUser.getUsername());
         }

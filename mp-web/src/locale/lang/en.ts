@@ -7,7 +7,7 @@ import dictManage from '@/locale/lang/dict-manage/en'
 import paramsManage from '@/locale/lang/params-manage/en'
 import logLogin from '@/locale/lang/log-login/en'
 import logOperate from '@/locale/lang/log-operate/en'
-import userCenter from '@/locale/lang/user-center/zhCn'
+import userCenter from '@/locale/lang/user-center/en'
 
 export const en = {
     systemName: '',
