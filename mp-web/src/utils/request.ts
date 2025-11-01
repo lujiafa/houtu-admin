@@ -4,7 +4,7 @@ import i18n from "@/locale/i18n"
 import router from '@/router/index'
 
 const baseConfig = {
-    baseURL: import.meta.env.VUE_APP_BASE_API,
+    baseURL: import.meta.env.VITE_BASE_API_URL,
     timeout: 15000,
 }
 axios.defaults.baseURL = baseConfig.baseURL;
