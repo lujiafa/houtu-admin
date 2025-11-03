@@ -32,7 +32,3 @@ mybatis-plus:
     db-config:
       id-type: auto
       table-underline: true
-
-houtu:
-  monitor:
-    fullRequest: true
