@@ -17,14 +17,6 @@ spring:
   security:
     mfa: false
 
-logging:
-  level:
-    com.baomidou: debug
-  file:
-    name: ${spring.application.name}
-    path: logs
-  config: classpath:log4j2-dev.xml
-
 mybatis-plus:
   mapper-locations: classpath*:mapper/*.xml
   typeAliasesPackage: com.houtu.mp.module.sys.entity
