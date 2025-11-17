@@ -1,22 +1,19 @@
 package com.houtu.mp.module.base.mfa.provider;
 
 import com.houtu.core.exception.ErrorCode;
-import com.houtu.mp.config.security.BizSecurityContextRepository;
 import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.mp.module.base.mfa.MFAProcessor;
 import com.houtu.mp.module.sys.entity.SysUserEntity;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.util.web.WebUtils;
 import com.houtu.web.model.ResponseData;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.stream.Stream;
 
 /**
@@ -25,9 +22,6 @@ import java.util.stream.Stream;
 public class EmailVerifyProcessor implements MFAProcessor {
 
     final static String CODE_ATTR_NAME = "emailCode";
-
-    @Autowired
-    private BizSecurityContextRepository bizSecurityContextRepository;
 
     @Override
     public MFAType getMfaType() {
@@ -48,7 +42,7 @@ public class EmailVerifyProcessor implements MFAProcessor {
         ServletRequestAttributes requestAttributes = WebUtils.getServletRequestAttributes();
         HttpServletRequest req = requestAttributes.getRequest();
         HttpServletResponse resp = requestAttributes.getResponse();
-        bizSecurityContextRepository.saveContext(SecurityContextHolder.getContext(), req, resp);
+        //
         return ResponseData.success();
     }
 
