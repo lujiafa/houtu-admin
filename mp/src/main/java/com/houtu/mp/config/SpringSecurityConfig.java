@@ -68,7 +68,7 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(authorize -> { // 授权过滤器配置
                     authorize.dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                             .requestMatchers("/api/login", "/api/getCaptcha").permitAll()
-                            .requestMatchers( "/swagger-ui/**", "/v3/api-docs/**").permitAll();
+                            .requestMatchers( "/swagger-ui/**", "/v3/api-docs/**", "/actuator/**").permitAll();
                     if (securityProperties.isMfa()) {
                         // 启用MFA
                         authorize.requestMatchers("/api/mfa/mfaTypes", "/api/mfa/send", "/api/mfa/verify").permitAll()
