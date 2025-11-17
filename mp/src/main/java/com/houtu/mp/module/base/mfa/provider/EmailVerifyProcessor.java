@@ -41,8 +41,7 @@ public class EmailVerifyProcessor implements MFAProcessor {
         // 发送验证码完成
         ServletRequestAttributes requestAttributes = WebUtils.getServletRequestAttributes();
         HttpServletRequest req = requestAttributes.getRequest();
-        HttpServletResponse resp = requestAttributes.getResponse();
-        //
+        SessionContext.update(req);
         return ResponseData.success();
     }
 
