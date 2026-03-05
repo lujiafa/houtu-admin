@@ -7,7 +7,7 @@ import com.houtu.mp.module.sys.entity.SysUserEntity;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.util.web.WebUtils;
 import com.houtu.web.model.ResponseData;
-import jakarta.servlet.http.HttpServletRequest;
+//import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +42,9 @@ public class WorkWeiXinVerifyProcessor implements MFAProcessor {
         if (StringUtils.isBlank(sysUserEntity.getPhone())) {
             return ResponseData.fail(ErrorCode.build(14, Stream.of("请先配置手机号").toArray()));
         }
-        String code = RandomStringUtils.secure().nextNumeric(1000, 9999);
-        String key = String.format(CACHE_KEY_PATTERN, sessionUser.getUserId());
-        redisTemplate.opsForValue().set(key, code, 5, TimeUnit.MINUTES);
+//        String code = RandomStringUtils.secure().nextNumeric(1000, 9999);
+//        String key = String.format(CACHE_KEY_PATTERN, sessionUser.getUserId());
+//        redisTemplate.opsForValue().set(key, code, 5, TimeUnit.MINUTES);
         // 发送企微消息开始
 
         // 发送企微消息完成
