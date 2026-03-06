@@ -1,6 +1,6 @@
 package com.houtu.mp.module.base.controller;
 
-import com.houtu.core.exception.ErrorCode;
+import io.github.lujiafa.houtu.core.exception.ErrorCode;
 import com.houtu.mp.aspect.OperateLog;
 import com.houtu.mp.config.SecurityProperties;
 import com.houtu.mp.config.security.SimpleUser;
@@ -16,7 +16,7 @@ import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.support.type.LoginType;
 import com.houtu.mp.support.type.ModuleType;
 import com.houtu.mp.support.type.OperateType;
-import com.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.web.model.ResponseData;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

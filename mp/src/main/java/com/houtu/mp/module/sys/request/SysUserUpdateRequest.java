@@ -1,6 +1,6 @@
 package com.houtu.mp.module.sys.request;
 
-import com.houtu.web.model.BaseForm;
+import io.github.lujiafa.houtu.web.model.BaseForm;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

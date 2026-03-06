@@ -2,7 +2,7 @@ package com.houtu.mp.module.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.houtu.core.exception.ErrorCode;
+import io.github.lujiafa.houtu.core.exception.ErrorCode;
 import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.mp.module.sys.dao.SysMenuDao;
 import com.houtu.mp.module.sys.dao.SysRoleDao;
@@ -19,7 +19,7 @@ import com.houtu.mp.support.type.CommonStatus;
 import com.houtu.mp.support.type.MenuIconType;
 import com.houtu.mp.support.type.MenuPathType;
 import com.houtu.mp.support.type.MenuType;
-import com.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.web.model.ResponseData;
 import jakarta.annotation.Resource;
 import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;

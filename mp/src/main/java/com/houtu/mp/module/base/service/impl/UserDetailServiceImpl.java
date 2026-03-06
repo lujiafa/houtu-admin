@@ -1,7 +1,7 @@
 package com.houtu.mp.module.base.service.impl;
 
-import com.houtu.core.exception.BusinessException;
-import com.houtu.core.exception.ErrorCode;
+import io.github.lujiafa.houtu.core.exception.BusinessException;
+import io.github.lujiafa.houtu.core.exception.ErrorCode;
 import com.houtu.mp.config.security.SecuritySupport;
 import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.mp.module.sys.dao.SysMenuDao;
@@ -11,7 +11,7 @@ import com.houtu.mp.module.sys.entity.SysRoleEntity;
 import com.houtu.mp.module.sys.entity.SysUserEntity;
 import com.houtu.mp.module.sys.service.SysUserService;
 import com.houtu.mp.support.type.CommonStatus;
-import com.houtu.util.web.WebUtils;
+import io.github.lujiafa.houtu.util.web.WebUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.BooleanUtils;

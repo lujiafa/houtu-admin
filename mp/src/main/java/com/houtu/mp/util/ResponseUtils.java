@@ -1,7 +1,7 @@
 package com.houtu.mp.util;
 
-import com.houtu.util.common.JsonUtils;
-import com.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.util.common.JsonUtils;
+import io.github.lujiafa.houtu.web.model.ResponseData;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
