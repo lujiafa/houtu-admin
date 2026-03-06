@@ -6,8 +6,8 @@ import com.houtu.mp.module.sys.request.SysParamsAddRequest;
 import com.houtu.mp.module.sys.request.SysParamsQueryRequest;
 import com.houtu.mp.module.sys.request.SysParamsUpdateRequest;
 import com.houtu.mp.module.sys.vo.SysParamsQueryVO;
-import com.houtu.web.model.ResponseData;
-import com.houtu.web.model.vo.PageDataVO;
+import io.github.lujiafa.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.web.model.vo.PageDataVO;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.houtu.mp.module.sys.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.houtu.web.model.form.PageForm;
+import io.github.lujiafa.houtu.web.model.form.PageForm;
 import lombok.Data;
 
 import java.time.LocalDateTime;

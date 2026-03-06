@@ -1,7 +1,7 @@
 package com.houtu.mp.module.sys.request;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.houtu.web.model.form.PageForm;
+import io.github.lujiafa.houtu.web.model.form.PageForm;
 import lombok.Data;
 
 @Data

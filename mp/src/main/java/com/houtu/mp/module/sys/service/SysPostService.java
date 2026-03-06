@@ -6,10 +6,10 @@ import com.houtu.mp.module.sys.request.SysPostAddRequest;
 import com.houtu.mp.module.sys.request.SysPostAuthorizeRequest;
 import com.houtu.mp.module.sys.request.SysPostQueryRequest;
 import com.houtu.mp.module.sys.request.SysPostUpdateRequest;
-import com.houtu.web.model.vo.PageDataVO;
+import io.github.lujiafa.houtu.web.model.vo.PageDataVO;
 import com.houtu.mp.module.sys.vo.SysPostQueryBaseVO;
 import com.houtu.mp.module.sys.vo.SysPostQueryVO;
-import com.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.web.model.ResponseData;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.houtu.mp.module.base.mfa;
 
-import com.houtu.core.exception.BusinessException;
-import com.houtu.core.exception.ErrorCode;
+import io.github.lujiafa.houtu.core.exception.BusinessException;
+import io.github.lujiafa.houtu.core.exception.ErrorCode;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.InitializingBean;

@@ -1,6 +1,6 @@
 package com.houtu.mp.module.sys.controller;
 
-import com.houtu.core.exception.ErrorCode;
+import io.github.lujiafa.houtu.core.exception.ErrorCode;
 import com.houtu.mp.aspect.OperateLog;
 import com.houtu.mp.module.sys.request.SysMenuAddRequest;
 import com.houtu.mp.module.sys.request.SysMenuQueryRequest;
@@ -9,7 +9,7 @@ import com.houtu.mp.module.sys.service.SysMenuService;
 import com.houtu.mp.module.sys.vo.SysMenuQueryVO;
 import com.houtu.mp.support.type.ModuleType;
 import com.houtu.mp.support.type.OperateType;
-import com.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.web.model.ResponseData;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;

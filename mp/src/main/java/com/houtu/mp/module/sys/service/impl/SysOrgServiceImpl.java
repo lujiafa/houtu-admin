@@ -2,7 +2,7 @@ package com.houtu.mp.module.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.houtu.core.exception.ErrorCode;
+import io.github.lujiafa.houtu.core.exception.ErrorCode;
 import com.houtu.mp.module.sys.dao.SysOrgDao;
 import com.houtu.mp.module.sys.dao.SysOrgRoleDao;
 import com.houtu.mp.module.sys.entity.SysOrgEntity;
@@ -15,7 +15,7 @@ import com.houtu.mp.module.sys.service.SysOrgService;
 import com.houtu.mp.module.sys.vo.SysOrgQueryBaseVO;
 import com.houtu.mp.module.sys.vo.SysOrgQueryVO;
 import com.houtu.mp.support.SessionContext;
-import com.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.web.model.ResponseData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.i18n.LocaleContextHolder;

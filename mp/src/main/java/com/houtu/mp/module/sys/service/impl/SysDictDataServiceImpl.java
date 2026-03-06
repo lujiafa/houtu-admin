@@ -2,7 +2,7 @@ package com.houtu.mp.module.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.houtu.core.exception.ErrorCode;
+import io.github.lujiafa.houtu.core.exception.ErrorCode;
 import com.houtu.mp.module.sys.dao.SysDictDao;
 import com.houtu.mp.module.sys.dao.SysDictDataDao;
 import com.houtu.mp.module.sys.entity.SysDictDataEntity;
@@ -12,7 +12,7 @@ import com.houtu.mp.module.sys.request.SysDictDataUpdateRequest;
 import com.houtu.mp.module.sys.service.SysDictDataService;
 import com.houtu.mp.module.sys.vo.SysDictDataQueryVO;
 import com.houtu.mp.support.SessionContext;
-import com.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.web.model.ResponseData;
 import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;

@@ -1,12 +1,12 @@
 package com.houtu.mp.module.base.mfa.provider;
 
-import com.houtu.core.exception.ErrorCode;
+import io.github.lujiafa.houtu.core.exception.ErrorCode;
 import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.mp.module.base.mfa.MFAProcessor;
 import com.houtu.mp.module.sys.entity.SysUserEntity;
 import com.houtu.mp.support.SessionContext;
-import com.houtu.util.web.WebUtils;
-import com.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.util.web.WebUtils;
+import io.github.lujiafa.houtu.web.model.ResponseData;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;

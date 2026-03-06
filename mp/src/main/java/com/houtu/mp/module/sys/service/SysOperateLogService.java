@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.houtu.mp.module.sys.entity.SysOperateLogEntity;
 import com.houtu.mp.module.sys.request.SysOperateQueryRequest;
 import com.houtu.mp.module.sys.vo.SysOperateLogQueryVO;
-import com.houtu.web.model.ResponseData;
-import com.houtu.web.model.vo.PageDataVO;
+import io.github.lujiafa.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.web.model.vo.PageDataVO;
 
 /**
  * <p>

@@ -6,7 +6,7 @@ import com.houtu.mp.module.sys.dao.SysLoginLogDao;
 import com.houtu.mp.module.sys.entity.SysLoginLogEntity;
 import com.houtu.mp.support.SessionContext;
 import com.houtu.mp.support.type.LoginType;
-import com.houtu.util.web.WebUtils;
+import io.github.lujiafa.houtu.util.web.WebUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.scheduling.annotation.Async;
