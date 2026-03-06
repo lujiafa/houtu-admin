@@ -1,6 +1,6 @@
 package com.houtu.mp.module.base.vo;
 
-import com.houtu.web.model.BaseVO;
+import io.github.lujiafa.houtu.web.model.BaseVO;
 import lombok.Data;
 
 @Data

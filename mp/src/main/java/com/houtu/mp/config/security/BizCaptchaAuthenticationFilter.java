@@ -1,8 +1,8 @@
 package com.houtu.mp.config.security;
 
 import com.houtu.mp.util.ResponseUtils;
-import com.houtu.core.exception.ErrorCode;
-import com.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.core.exception.ErrorCode;
+import io.github.lujiafa.houtu.web.model.ResponseData;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;

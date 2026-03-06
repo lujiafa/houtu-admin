@@ -1,14 +1,14 @@
 package com.houtu.mp.config;
 
-import com.houtu.core.exception.BusinessException;
-import com.houtu.core.exception.ErrorCode;
+import io.github.lujiafa.houtu.core.exception.BusinessException;
+import io.github.lujiafa.houtu.core.exception.ErrorCode;
 import com.houtu.mp.config.security.BizCaptchaAuthenticationFilter;
 import com.houtu.mp.config.security.MFAAuthorizationManager;
 import com.houtu.mp.config.security.SimpleUser;
 import com.houtu.mp.module.base.service.LoginLogService;
 import com.houtu.mp.support.type.LoginType;
 import com.houtu.mp.util.ResponseUtils;
-import com.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.web.model.ResponseData;
 import jakarta.servlet.DispatcherType;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;

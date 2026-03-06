@@ -8,9 +8,9 @@ import com.houtu.mp.module.sys.request.SysUserQueryRequest;
 import com.houtu.mp.module.sys.request.SysUserUpdateRequest;
 import com.houtu.mp.module.sys.request.*;
 import com.houtu.mp.module.sys.vo.SysUserSecretVO;
-import com.houtu.web.model.vo.PageDataVO;
+import io.github.lujiafa.houtu.web.model.vo.PageDataVO;
 import com.houtu.mp.module.sys.vo.SysUserQueryVO;
-import com.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.web.model.ResponseData;
 
 /**
  * <p>

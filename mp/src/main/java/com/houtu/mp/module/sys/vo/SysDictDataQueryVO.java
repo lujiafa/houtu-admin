@@ -2,7 +2,7 @@ package com.houtu.mp.module.sys.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.houtu.web.model.BaseVO;
+import io.github.lujiafa.houtu.web.model.BaseVO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
