@@ -1,7 +1,7 @@
 package com.houtu.mp.module.base.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.houtu.web.model.BaseVO;
+import io.github.lujiafa.houtu.web.model.BaseVO;
 import lombok.Data;
 
 import java.io.Serializable;

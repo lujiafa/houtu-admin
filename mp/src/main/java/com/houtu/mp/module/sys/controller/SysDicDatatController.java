@@ -6,7 +6,7 @@ import com.houtu.mp.module.sys.service.SysDictDataService;
 import com.houtu.mp.module.sys.vo.SysDictDataQueryVO;
 import com.houtu.mp.support.type.ModuleType;
 import com.houtu.mp.support.type.OperateType;
-import com.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.web.model.ResponseData;
 import javax.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;

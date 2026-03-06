@@ -5,10 +5,10 @@ import com.houtu.mp.module.sys.entity.SysRoleEntity;
 import com.houtu.mp.module.sys.request.SysRoleAddRequest;
 import com.houtu.mp.module.sys.request.SysRoleQueryRequest;
 import com.houtu.mp.module.sys.request.SysRoleUpdateRequest;
-import com.houtu.web.model.vo.PageDataVO;
+import io.github.lujiafa.houtu.web.model.vo.PageDataVO;
 import com.houtu.mp.module.sys.vo.SysRoleQueryUserOperableVO;
 import com.houtu.mp.module.sys.vo.SysRoleQueryVO;
-import com.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.web.model.ResponseData;
 
 import java.util.List;
 

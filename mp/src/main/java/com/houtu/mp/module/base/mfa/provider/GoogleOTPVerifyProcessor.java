@@ -1,10 +1,10 @@
 package com.houtu.mp.module.base.mfa.provider;
 
-import com.houtu.core.exception.ErrorCode;
+import io.github.lujiafa.houtu.core.exception.ErrorCode;
 import com.houtu.mp.module.base.mfa.MFAProcessor;
 import com.houtu.mp.module.sys.entity.SysUserEntity;
 import com.houtu.mp.util.OTPUtils;
-import com.houtu.web.model.ResponseData;
+import io.github.lujiafa.houtu.web.model.ResponseData;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 

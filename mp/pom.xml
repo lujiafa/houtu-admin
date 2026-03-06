@@ -17,7 +17,7 @@
         <kaptcha.version>2.3.2</kaptcha.version>
         <googleauth.version>1.4.0</googleauth.version>
         <zxing.version>3.5.3</zxing.version>
-        <io.github.lujiafa.houtu.dependencies.version>2.7.0-SNAPSHOT</io.github.lujiafa.houtu.dependencies.version>
+        <io.github.lujiafa.dependencies.version>2.7.1</io.github.lujiafa.dependencies.version>
         <lombok.version>1.18.38</lombok.version>
     </properties>
 
@@ -93,11 +93,11 @@
         </dependency>
 
         <dependency>
-            <groupId>com.houtu</groupId>
+            <groupId>io.github.lujiafa</groupId>
             <artifactId>houtu-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.houtu</groupId>
+            <groupId>io.github.lujiafa</groupId>
             <artifactId>houtu-web-swagger</artifactId>
         </dependency>
 
@@ -167,9 +167,9 @@
 
         <dependencies>
             <dependency>
-                <groupId>com.houtu</groupId>
+                <groupId>io.github.lujiafa</groupId>
                 <artifactId>houtu-dependencies</artifactId>
-                <version>${io.github.lujiafa.houtu.dependencies.version}</version>
+                <version>${io.github.lujiafa.dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

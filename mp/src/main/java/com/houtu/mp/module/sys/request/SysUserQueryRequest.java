@@ -1,6 +1,6 @@
 package com.houtu.mp.module.sys.request;
 
-import com.houtu.web.model.form.PageForm;
+import io.github.lujiafa.houtu.web.model.form.PageForm;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 

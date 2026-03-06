@@ -2,9 +2,9 @@ package com.houtu.mp;
 
 import com.houtu.mp.module.sys.dao.SysUserDao;
 import com.houtu.mp.module.sys.entity.SysUserEntity;
-import com.houtu.util.common.CodecData;
-import com.houtu.util.crypto.HMacSHAUtils;
-import com.houtu.util.crypto.type.HmacSHAAlgorithm;
+import io.github.lujiafa.houtu.util.common.CodecData;
+import io.github.lujiafa.houtu.util.crypto.HMacSHAUtils;
+import io.github.lujiafa.houtu.util.crypto.type.HmacSHAAlgorithm;
 import javax.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

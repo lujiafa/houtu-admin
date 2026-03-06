@@ -6,7 +6,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorConfig;
-import com.houtu.util.crypto.Base64Utils;
+import io.github.lujiafa.houtu.util.crypto.Base64Utils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
