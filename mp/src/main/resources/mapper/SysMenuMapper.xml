@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.houtu.mp.module.sys.dao.SysMenuDao">
+<mapper namespace="com.xx.mp.module.sys.dao.SysMenuDao">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.houtu.mp.module.sys.entity.SysMenuEntity">
+    <resultMap id="BaseResultMap" type="com.xx.mp.module.sys.entity.SysMenuEntity">
         <id column="menu_id" property="menuId" />
         <result column="menu_name" property="menuName" />
         <result column="parent_id" property="parentId" />
@@ -51,7 +51,7 @@
         order by `sort`
     </select>
 
-    <update id="updateById" parameterType="com.houtu.mp.module.sys.entity.SysMenuEntity">
+    <update id="updateById" parameterType="com.xx.mp.module.sys.entity.SysMenuEntity">
         update sys_menu set
         perms=#{perms},
         <if test="menuName != null">
