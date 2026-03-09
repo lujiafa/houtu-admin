@@ -30,7 +30,7 @@
 		<root level="info">
 			<appender-ref ref="Console" />
 		</root>
-		<logger name="com.houtu" level="info" additivity="false">
+		<logger name="com.xx" level="info" additivity="false">
 			<appender-ref ref="appLog"/>
 			<appender-ref ref="Console" />
 		</logger>
