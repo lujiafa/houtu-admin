@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.houtu.mp.module.sys.dao.SysOperateLogDao">
+<mapper namespace="com.xx.mp.module.sys.dao.SysOperateLogDao">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.houtu.mp.module.sys.entity.SysOperateLogEntity">
+    <resultMap id="BaseResultMap" type="com.xx.mp.module.sys.entity.SysOperateLogEntity">
         <id column="operate_id" property="operateId" />
         <result column="module_name" property="moduleName" />
         <result column="operate_type" property="operateType" />

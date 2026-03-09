@@ -1,0 +1,12 @@
+package com.xx.mp.module.sys.request;
+
+import io.github.lujiafa.houtu.web.model.BaseForm;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+@Data
+public class SysUserResetSecretRequest extends BaseForm {
+
+    @NotNull(message = "userId can't be null")
+    private Long userId;
+}
