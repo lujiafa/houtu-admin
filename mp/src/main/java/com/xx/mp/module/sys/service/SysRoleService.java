@@ -1,0 +1,39 @@
+package com.xx.mp.module.sys.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.xx.mp.module.sys.entity.SysRoleEntity;
+import com.xx.mp.module.sys.request.SysRoleAddRequest;
+import com.xx.mp.module.sys.request.SysRoleQueryRequest;
+import com.xx.mp.module.sys.request.SysRoleUpdateRequest;
+import io.github.lujiafa.houtu.web.model.vo.PageDataVO;
+import com.xx.mp.module.sys.vo.SysRoleQueryUserOperableVO;
+import com.xx.mp.module.sys.vo.SysRoleQueryVO;
+import io.github.lujiafa.houtu.web.model.ResponseData;
+
+import java.util.List;
+
+/**
+ * <p>
+ * sys_role 服务类
+ * </p>
+ *
+ * @author houtu
+ * @since 2024-06-24
+ */
+public interface SysRoleService extends IService<SysRoleEntity> {
+
+    /**
+     * 查询用户可操作的角色列表
+     * @return List<SysRoleQueryBaseVO>
+     */
+    List<SysRoleQueryUserOperableVO> queryUserOperableList();
+
+    ResponseData<PageDataVO<SysRoleQueryVO>> pageQuery(SysRoleQueryRequest request);
+
+    ResponseData save(SysRoleAddRequest request);
+
+    ResponseData update(SysRoleUpdateRequest request);
+
+    ResponseData delete(List<Long> roleIds);
+
+}

@@ -1,0 +1,14 @@
+package com.xx.mp.module.sys.request;
+
+import io.github.lujiafa.houtu.web.model.form.PageForm;
+import lombok.Data;
+
+@Data
+public class SysDictQueryRequest extends PageForm {
+
+    private String typeCode;
+
+    private String typeName;
+
+    private Integer status;
+}
