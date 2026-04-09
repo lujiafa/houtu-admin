@@ -1,5 +1,5 @@
 server:
-  port: 9090
+  port: 29090
   tomcat:
     uri-encoding: UTF-8
     max-connections: 2000
@@ -18,7 +18,7 @@ spring:
   profiles:
     active: dev
   security:
-    mfa: false
+    mfa: true
 
 mybatis-plus:
   mapper-locations: classpath*:mapper/*.xml
