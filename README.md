@@ -1,8 +1,8 @@
 <div align="center">
 
-# Houtu Admin (后土管理平台)
+# Houtu Admin
 
-**基于 Houtu 框架的企业级权限管理系统**
+**Enterprise-grade Permission Management System Built on the Houtu Framework**
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![JDK](https://img.shields.io/badge/JDK-8+-green.svg)](https://openjdk.org/)
@@ -10,151 +10,153 @@
 [![Vue](https://img.shields.io/badge/Vue-3.x-4FC08D.svg)](https://vuejs.org/)
 [![Element Plus](https://img.shields.io/badge/Element%20Plus-latest-409EFF.svg)](https://element-plus.org/)
 
-前后端分离的权限管理系统，实现菜单、角色、用户、岗位、组织等一体化权限控制，满足企业级管理平台需求。
+A full-stack permission management system with separated frontend and backend, providing integrated access control for menus, roles, users, positions, and organizations to meet enterprise-level management platform requirements.
 
-[功能特性](#-功能特性) | [界面预览](#-界面预览) | [技术架构](#-技术架构) | [快速开始](#-快速开始) | [项目结构](#-项目结构) | [参与贡献](#-参与贡献)
+[Features](#-features) | [Screenshots](#-screenshots) | [Architecture](#-architecture) | [Quick Start](#-quick-start) | [Project Structure](#-project-structure) | [Contributing](#-contributing)
+
+English | [中文](README-CN.md)
 
 </div>
 
 ---
 
-## 界面预览
+## Screenshots
 
-### 登录页
-![登录页](docs/images/login.png)
+### Login Page
+![Login Page](docs/images/login.png)
 
-### MFA 双因素认证
-![MFA 认证](docs/images/login-mfa.png)
+### MFA Two-Factor Authentication
+![MFA Authentication](docs/images/login-mfa.png)
 
-### 主页面
-![主页面](docs/images/index.png)
+### Main Page
+![Main Page](docs/images/index.png)
 
-### 个人中心
-![个人中心](docs/images/my.png)
-
----
-
-## 功能特性
-
-### 权限管理
-- **用户管理** — 用户增删改查、状态管理、密码重置
-- **角色管理** — 角色分配、菜单权限绑定、数据权限控制
-- **菜单管理** — 多级菜单配置、按钮级权限控制、动态路由
-- **组织管理** — 树形组织架构、部门层级管理
-- **岗位管理** — 岗位编码与名称维护、用户岗位分配
-
-### 系统管理
-- **字典管理** — 系统字典类型与数据维护，支持状态控制
-- **参数管理** — 系统参数配置、动态修改
-- **公告管理** — 系统公告发布与查看
-
-### 安全 & 审计
-- **登录认证** — 基于 Spring Security，支持图形验证码（Kaptcha）
-- **MFA 双因素认证** — 集成 Google Authenticator（OTP），通过 `spring.security.mfa=true` 开启（默认关闭），开启后登录需二次验证，支持扫码绑定
-- **登录日志** — 记录登录时间、IP、状态等信息
-- **操作日志** — 关键操作审计追踪
-
-### 体验增强
-- **多布局模式** — 支持正常模式、全屏模式、移动端模式，适配不同使用场景
-- **国际化 (i18n)** — 中英文双语切换，基于 Vue I18n
-- **字号切换** — 支持大、中、小三档字号，适应不同用户视觉偏好
-- **Swagger 文档** — 基于 SpringDoc OpenAPI，接口文档自动生成
+### Profile
+![Profile](docs/images/my.png)
 
 ---
 
-## 技术架构
+## Features
+
+### Permission Management
+- **User Management** — CRUD operations, status management, password reset
+- **Role Management** — Role assignment, menu permission binding, data permission control
+- **Menu Management** — Multi-level menu configuration, button-level permission control, dynamic routing
+- **Organization Management** — Tree-structured organization hierarchy, department level management
+- **Position Management** — Position code and name maintenance, user-position assignment
+
+### System Management
+- **Dictionary Management** — System dictionary types and data maintenance with status control
+- **Parameter Management** — System parameter configuration and dynamic modification
+- **Announcement Management** — System announcement publishing and viewing
+
+### Security & Audit
+- **Login Authentication** — Based on Spring Security with CAPTCHA support (Kaptcha)
+- **MFA Two-Factor Authentication** — Integrated with Google Authenticator (OTP), enabled via `spring.security.mfa=true` (disabled by default). When enabled, login requires secondary verification with QR code binding support
+- **Login Logs** — Records login time, IP, status, and other information
+- **Operation Logs** — Critical operation audit trail
+
+### Experience Enhancement
+- **Multiple Layout Modes** — Supports normal mode, fullscreen mode, and mobile mode for different usage scenarios
+- **Internationalization (i18n)** — Chinese/English bilingual switching based on Vue I18n
+- **Font Size Switching** — Supports large, medium, and small font sizes to accommodate different visual preferences
+- **Swagger Documentation** — Automatic API documentation generation based on SpringDoc OpenAPI
+
+---
+
+## Architecture
 
 ```
-┌──────────────────────── 前端 (mp-web) ────────────────────────┐
+┌───────────────────── Frontend (mp-web) ───────────────────────┐
 │  Vue 3 + Element Plus + Pinia + Vue Router + Vue I18n + Vite  │
 └───────────────────────────────┬────────────────────────────────┘
                                 │ RESTful API
-┌───────────────────────────────┼──── 后端 (mp) ────────────────────────────┐
+┌───────────────────────────────┼──── Backend (mp) ─────────────────────────┐
 │                               │                                           │
-│  ┌─── 安全层 ─────────┐  ┌─── 数据层 ─────────┐  ┌─── 基础设施 ──────┐  │
-│  │ Spring Security    │  │ MyBatis Plus      │  │ Redis (缓存/会话) │  │
-│  │ Session (Redis)    │  │ MySQL             │  │ Caffeine (L2缓存) │  │
-│  │ Kaptcha 验证码     │  │ HikariCP 连接池    │  │ Log4j2 日志       │  │
-│  │ Google Auth (MFA)  │  └────────────────────┘  └───────────────────┘  │
-│  └────────────────────┘                                                  │
-│                                                                          │
-│  ┌─── Houtu 框架 ────────────────────────────────────────────────────┐   │
-│  │ houtu-web (统一参数解析/响应封装/异常处理)                          │   │
-│  │ houtu-web-swagger (SpringDoc OpenAPI 文档增强)                     │   │
-│  └───────────────────────────────────────────────────────────────────┘   │
-└──────────────────────────────────────────────────────────────────────────┘
+│  ┌── Security ────────┐  ┌── Data Layer ──────┐  ┌── Infrastructure ──┐  │
+│  │ Spring Security    │  │ MyBatis Plus      │  │ Redis (Cache/Sess) │  │
+│  │ Session (Redis)    │  │ MySQL             │  │ Caffeine (L2 Cache)│  │
+│  │ Kaptcha CAPTCHA    │  │ HikariCP Pool     │  │ Log4j2 Logging     │  │
+│  │ Google Auth (MFA)  │  └────────────────────┘  └────────────────────┘  │
+│  └────────────────────┘                                                   │
+│                                                                           │
+│  ┌── Houtu Framework ────────────────────────────────────────────────┐    │
+│  │ houtu-web (Unified param parsing / response wrapping / exception) │    │
+│  │ houtu-web-swagger (SpringDoc OpenAPI documentation enhancement)    │    │
+│  └───────────────────────────────────────────────────────────────────┘    │
+└───────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 前端技术栈
+### Frontend Stack
 
-| 技术 | 说明 |
-|------|------|
-| Vue 3 | 渐进式 JavaScript 框架 |
-| Element Plus | Vue 3 UI 组件库 |
-| Pinia | Vue 状态管理 |
-| Vue Router | 前端路由 |
-| Vue I18n | 国际化 |
-| Vite 5 | 下一代前端构建工具 |
-| Axios | HTTP 客户端 |
-| Iconify | 图标解决方案 |
+| Technology | Description |
+|------------|-------------|
+| Vue 3 | Progressive JavaScript framework |
+| Element Plus | Vue 3 UI component library |
+| Pinia | Vue state management |
+| Vue Router | Frontend routing |
+| Vue I18n | Internationalization |
+| Vite 5 | Next-generation frontend build tool |
+| Axios | HTTP client |
+| Iconify | Icon solution |
 
-### 后端技术栈
+### Backend Stack
 
-| 技术 | 说明 |
-|------|------|
-| JDK 8 | Java 运行环境 |
-| Spring Boot 2.7.x | 应用框架 |
-| Spring Security | 安全框架 |
-| Spring Session | 分布式会话管理 |
-| MyBatis Plus | ORM 增强框架 |
-| Redis + Lettuce | 缓存 & 会话存储 |
-| MySQL | 关系型数据库 |
-| [Houtu](https://github.com/lujiafa/houtu-dependencies) | 企业级 Java 基础框架 |
+| Technology | Description |
+|------------|-------------|
+| JDK 8 | Java runtime environment |
+| Spring Boot 2.7.x | Application framework |
+| Spring Security | Security framework |
+| Spring Session | Distributed session management |
+| MyBatis Plus | Enhanced ORM framework |
+| Redis + Lettuce | Cache & session storage |
+| MySQL | Relational database |
+| [Houtu](https://github.com/lujiafa/houtu-dependencies) | Enterprise-grade Java base framework |
 
 ---
 
-## 快速开始
+## Quick Start
 
-### 环境要求
+### Prerequisites
 
-| 环境 | 版本 |
-|------|------|
+| Requirement | Version |
+|-------------|---------|
 | JDK | 8+ |
 | Maven | 3.6+ |
 | Node.js | 18+ |
 | MySQL | 5.7+ / 8.0+ |
 | Redis | 5.0+ |
 
-### 1. 克隆项目
+### 1. Clone the Repository
 
 ```bash
 git clone -b 2.7.0 https://github.com/lujiafa/houtu-admin.git
 cd houtu-admin
 ```
 
-### 2. 初始化数据库
+### 2. Initialize the Database
 
-创建 MySQL 数据库并导入初始化脚本：
+Create a MySQL database and import the initialization script:
 
 ```bash
 mysql -u root -p < docs/sql/base.sql
 ```
 
-### 3. 启动后端
+### 3. Start the Backend
 
 ```bash
 cd mp
 
-# 修改数据库和 Redis 连接配置
-# 编辑 src/main/resources/application-dev.yml
+# Modify database and Redis connection configuration
+# Edit src/main/resources/application-dev.yml
 
-# 启动
+# Start
 mvn spring-boot:run
 ```
 
-后端服务默认启动在 `http://localhost:9090`。
+The backend service starts at `http://localhost:9090` by default.
 
-### 4. 启动前端
+### 4. Start the Frontend
 
 ```bash
 cd mp-web
@@ -164,76 +166,76 @@ npm install
 npm run serve:dev
 ```
 
-前端服务默认启动在 `http://localhost:81`。
+The frontend service starts at `http://localhost:81` by default.
 
 ---
 
-## 项目结构
+## Project Structure
 
 ```
 houtu-admin
-├── mp/                          # 后端 (Spring Boot)
+├── mp/                          # Backend (Spring Boot)
 │   └── src/main/java/
 │       └── com/xx/mp/
-│           ├── aspect/          # AOP 切面
-│           ├── config/          # 配置类
-│           │   └── security/    # Spring Security 配置
+│           ├── aspect/          # AOP aspects
+│           ├── config/          # Configuration classes
+│           │   └── security/    # Spring Security config
 │           ├── module/
-│           │   ├── base/        # 基础模块 (登录/菜单/用户中心/MFA)
-│           │   └── sys/         # 系统管理模块
-│           │       ├── controller/  # 接口层
-│           │       ├── dao/         # 数据访问层
-│           │       ├── entity/      # 实体类
-│           │       ├── service/     # 业务逻辑层
-│           │       └── vo/          # 视图对象
-│           ├── support/         # 通用支撑
-│           └── util/            # 工具类
-├── mp-web/                      # 前端 (Vue 3)
+│           │   ├── base/        # Base module (Login/Menu/Profile/MFA)
+│           │   └── sys/         # System management module
+│           │       ├── controller/  # Controller layer
+│           │       ├── dao/         # Data access layer
+│           │       ├── entity/      # Entity classes
+│           │       ├── service/     # Business logic layer
+│           │       └── vo/          # View objects
+│           ├── support/         # Common support
+│           └── util/            # Utility classes
+├── mp-web/                      # Frontend (Vue 3)
 │   └── src/
-│       ├── components/          # 公共组件
-│       ├── layout/              # 布局组件
-│       ├── locale/              # 国际化资源
-│       ├── router/              # 路由配置
-│       ├── store/               # Pinia 状态管理
-│       ├── utils/               # 工具函数
-│       └── views/               # 页面视图
-│           ├── UserManage/      # 用户管理
-│           ├── RoleManage/      # 角色管理
-│           ├── MenuManage/      # 菜单管理
-│           ├── OrgManage/       # 组织管理
-│           ├── PostManage/      # 岗位管理
-│           ├── DictManage/      # 字典管理
-│           ├── ParamsManage/    # 参数管理
-│           ├── Announcement/    # 公告管理
-│           ├── LoginLog/        # 登录日志
-│           ├── OptLog/          # 操作日志
+│       ├── components/          # Shared components
+│       ├── layout/              # Layout components
+│       ├── locale/              # i18n resources
+│       ├── router/              # Route configuration
+│       ├── store/               # Pinia state management
+│       ├── utils/               # Utility functions
+│       └── views/               # Page views
+│           ├── UserManage/      # User management
+│           ├── RoleManage/      # Role management
+│           ├── MenuManage/      # Menu management
+│           ├── OrgManage/       # Organization management
+│           ├── PostManage/      # Position management
+│           ├── DictManage/      # Dictionary management
+│           ├── ParamsManage/    # Parameter management
+│           ├── Announcement/    # Announcement management
+│           ├── LoginLog/        # Login logs
+│           ├── OptLog/          # Operation logs
 │           └── ...
 └── docs/
-    └── sql/                     # 数据库脚本
+    └── sql/                     # Database scripts
         └── base.sql
 ```
 
 ---
 
-## 关联项目
+## Related Projects
 
-| 项目 | 说明 |
-|------|------|
-| [houtu-dependencies](https://github.com/lujiafa/houtu-dependencies) | Houtu 基础框架 — 提供 Web 增强、缓存、安全、Spring Cloud 扩展等企业级基础设施 |
-
----
-
-## 参与贡献
-
-欢迎各种形式的贡献：
-
-- **报告问题** — 使用 [Issues](https://github.com/lujiafa/houtu-admin/issues) 提交 Bug 或功能建议
-- **提交代码** — Fork 仓库 → 创建功能分支 → 提交 Pull Request
-- **完善文档** — 修正错误、补充示例、改进说明
-- **测试反馈** — 在不同环境下测试并反馈兼容性
+| Project | Description |
+|---------|-------------|
+| [houtu-dependencies](https://github.com/lujiafa/houtu-dependencies) | Houtu Base Framework — Provides web enhancement, caching, security, Spring Cloud extensions and other enterprise-grade infrastructure |
 
 ---
 
-## 许可证
+## Contributing
+
+Contributions of all kinds are welcome:
+
+- **Report Issues** — Submit bugs or feature requests via [Issues](https://github.com/lujiafa/houtu-admin/issues)
+- **Submit Code** — Fork the repository → Create a feature branch → Submit a Pull Request
+- **Improve Documentation** — Fix errors, add examples, improve descriptions
+- **Test & Feedback** — Test in different environments and report compatibility
+
+---
+
+## License
 
 MIT License
