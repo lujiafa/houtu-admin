@@ -17,7 +17,7 @@
         <kaptcha.version>2.3.2</kaptcha.version>
         <googleauth.version>1.4.0</googleauth.version>
         <zxing.version>3.5.3</zxing.version>
-        <io.github.lujiafa.dependencies.version>2.7.1</io.github.lujiafa.dependencies.version>
+        <io.github.lujiafa.dependencies.version>2.7.3</io.github.lujiafa.dependencies.version>
         <lombok.version>1.18.38</lombok.version>
     </properties>
 
