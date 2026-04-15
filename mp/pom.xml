@@ -16,7 +16,7 @@
         <kaptcha.version>2.3.2</kaptcha.version>
         <googleauth.version>1.4.0</googleauth.version>
         <zxing.version>3.5.3</zxing.version>
-        <houtu.dependencies.version>3.5.0-SNAPSHOT</houtu.dependencies.version>
+        <houtu.dependencies.version>3.5.2</houtu.dependencies.version>
         <lombok.version>1.18.38</lombok.version>
     </properties>
 
