@@ -22,7 +22,7 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath*:mapper/*.xml
-  typeAliasesPackage: com.houtu.mp.module.sys.entity
+  typeAliasesPackage: com.xx.mp.module.sys.entity
   global-config:
     db-config:
       id-type: auto
