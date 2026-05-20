@@ -17,7 +17,7 @@
         <kaptcha.version>2.3.2</kaptcha.version>
         <googleauth.version>1.4.0</googleauth.version>
         <zxing.version>3.5.3</zxing.version>
-        <io.github.lujiafa.dependencies.version>2.7.3</io.github.lujiafa.dependencies.version>
+        <io.github.lujiafa.dependencies.version>2.7.4</io.github.lujiafa.dependencies.version>
         <lombok.version>1.18.38</lombok.version>
     </properties>
 
@@ -100,6 +100,10 @@
             <groupId>io.github.lujiafa</groupId>
             <artifactId>houtu-web-swagger</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.lujiafa</groupId>
+            <artifactId>houtu-id</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -121,11 +125,6 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <dependency>
