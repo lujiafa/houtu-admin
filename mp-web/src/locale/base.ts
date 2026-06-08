@@ -10,7 +10,7 @@ export const supportedLocales = [
         elementPlusLocale: en,
     },
     {
-        code:'zhCn',
+        code:'zh-CN',
         label: '中文',
         i18n: 'zhCn',
         elementPlusLocale: zhCn,
